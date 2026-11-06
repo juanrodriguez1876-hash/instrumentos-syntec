@@ -1,0 +1,42 @@
+!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Usuarios | Instrumentos Sintek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+
+  <main class="contenido">
+    <!-- Solo el administrador ve esta pantalla. Roles: Administrador (todo) y Empleado (ventas, consulta de existencias y asistencia). Desactivar NO borra la cuenta. -->
+    <div class="barra-accion"><a href="crear-cuenta.html" class="enlace-accion">Agregar usuario <span class="icono-mas" aria-hidden="true">+</span></a></div>
+    <h1 class="titulo">Usuarios</h1>
+
+    <div class="tabla-contenedor">
+      <table class="tabla tabla--tarjetas" aria-label="Cuentas del sistema">
+        <thead><tr><th scope="col">Usuario</th><th scope="col">Rol</th><th scope="col">Último acceso</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Usuario"><span class="quien"><i aria-hidden="true">AT</i><span><b>Ana Torres</b><small>@atorres</small></span></span></td><td data-label="Rol">Administrador</td><td data-label="Último acceso">Hoy, 8:54 a. m.</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Cambiar rol de Ana Torres">Cambiar rol</button><button type="submit" class="boton boton--chico " aria-label="Restablecer contraseña de Ana Torres"
+                        onclick="return confirm('¿Restablecer la contraseña de Ana Torres?')">Restablecer contraseña</button><button type="submit" class="boton boton--chico boton--peligro" aria-label="Desactivar a Ana Torres"
+                        onclick="return confirm('¿Desactivar la cuenta de Ana Torres?')">Desactivar</button></form></td></tr>
+          <tr><td data-label="Usuario"><span class="quien"><i aria-hidden="true">LO</i><span><b>Luis Ortega</b><small>@lortega</small></span></span></td><td data-label="Rol">Empleado</td><td data-label="Último acceso">Hoy, 9:08 a. m.</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Cambiar rol de Luis Ortega">Cambiar rol</button><button type="submit" class="boton boton--chico " aria-label="Restablecer contraseña de Luis Ortega"
+                        onclick="return confirm('¿Restablecer la contraseña de Luis Ortega?')">Restablecer contraseña</button><button type="submit" class="boton boton--chico boton--peligro" aria-label="Desactivar a Luis Ortega"
+                        onclick="return confirm('¿Desactivar la cuenta de Luis Ortega?')">Desactivar</button></form></td></tr>
+          <tr><td data-label="Usuario"><span class="quien"><i aria-hidden="true">SM</i><span><b>Sofía Medina</b><small>@smedina</small></span></span></td><td data-label="Rol">Empleado</td><td data-label="Último acceso">Ayer, 5:41 p. m.</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Cambiar rol de Sofía Medina">Cambiar rol</button><button type="submit" class="boton boton--chico " aria-label="Restablecer contraseña de Sofía Medina"
+                        onclick="return confirm('¿Restablecer la contraseña de Sofía Medina?')">Restablecer contraseña</button><button type="submit" class="boton boton--chico boton--peligro" aria-label="Desactivar a Sofía Medina"
+                        onclick="return confirm('¿Desactivar la cuenta de Sofía Medina?')">Desactivar</button></form></td></tr>
+          <tr class=inactiva><td data-label="Usuario"><span class="quien"><i aria-hidden="true">DR</i><span><b>Diego Ramos</b><small>@dramos</small></span></span></td><td data-label="Rol">Empleado</td><td data-label="Último acceso">12/09/2026</td><td data-label="Estado"><span class="estado estado--neu">Inactivo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Cambiar rol de Diego Ramos">Cambiar rol</button><button type="submit" class="boton boton--chico " aria-label="Restablecer contraseña de Diego Ramos"
+                        onclick="return confirm('¿Restablecer la contraseña de Diego Ramos?')">Restablecer contraseña</button><button type="submit" class="boton boton--chico " aria-label="Reactivar a Diego Ramos">Reactivar</button></form></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

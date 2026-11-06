@@ -1,0 +1,36 @@
+!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menú | Instrumentos Sintek</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <a href="index.html" class="boton-barra">Cerrar sesión</a>
+    <svg class="logo" viewBox="0 0 64 72" role="img" aria-label="Logo Instrumentos Sintek">
+      <path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="#0b1f4b"/>
+      <text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#fff" font-family="Oswald, Arial, sans-serif">IS</text>
+    </svg>
+  </header>
+  <p class="aviso" role="status" hidden>Operación exitosa</p>
+  <main class="contenido">
+    <h1 class="titulo titulo--centro">MENÚ</h1>
+    <nav class="menu-principal" aria-label="Opciones del sistema">
+      <a href="#" class="boton">Registrar venta</a>
+      <a href="#" class="boton">Control de inventario</a>
+      <a href="#" class="boton">Registrar producto</a>
+      <a href="#" class="boton">Métodos de pago</a>
+      <a href="#" class="boton">Gestión de empleados</a>
+      <a href="#" class="boton">Generar reportes</a>
+      <a href="#" class="boton">Gestión de inventario</a>
+      <a href="#" class="boton">Existencias</a>
+      <a href="#" class="boton">Nuevo empleado</a>
+      <a href="#" class="boton">Consulta de existencia</a>
+      <a href="#" class="boton">Proveedores</a>
+    </nav>
+  </main>
+</body>
+</html>

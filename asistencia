@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asistencia | Instrumentos Sintek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+
+  <main class="contenido">
+    <!-- Datos de ejemplo. Cada botón guardará la hora actual en la tabla de asistencia. -->
+    <h1 class="titulo">Asistencia</h1>
+
+    <p class="nota">Sábado 31 de octubre de 2026 · La hora se guarda automáticamente al pulsar el botón.</p>
+    <div class="tabla-contenedor">
+      <table class="tabla tabla--tarjetas" aria-label="Asistencia de hoy">
+        <thead><tr><th scope="col">Empleado</th><th scope="col">Entrada</th><th scope="col">Salida</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">AT</i><span><b>Ana Torres</b></span></span></td><td data-label="Entrada">9:02 a. m.</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--ok">Presente</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar salida de Ana Torres">Registrar salida</button></form></td></tr>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">LO</i><span><b>Luis Ortega</b></span></span></td><td data-label="Entrada">9:10 a. m.</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--ok">Presente</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar salida de Luis Ortega">Registrar salida</button></form></td></tr>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">SM</i><span><b>Sofía Medina</b></span></span></td><td data-label="Entrada">—</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--poco">Sin registrar</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar entrada de Sofía Medina">Registrar entrada</button></form></td></tr>
+          <tr class=inactiva><td data-label="Empleado"><span class="quien"><i aria-hidden="true">DR</i><span><b>Diego Ramos</b></span></span></td><td data-label="Entrada">—</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--neu">Inactivo</span></td><td data-label="Acciones"><span class="nota">Sin acciones</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>
