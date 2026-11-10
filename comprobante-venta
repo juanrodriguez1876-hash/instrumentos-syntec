@@ -1,55 +1,261 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Comprobante de venta | Instrumentos Sintek</title>
+  <title>Comprobante de venta | Instrumentos Sintec</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
-  <script src="layout.js"></script>
+  <script src="layout.js" defer></script>
+
+  <style>
+    .comprobante {
+      max-width: 750px;
+      margin: 25px auto;
+      padding: 30px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    .comprobante header {
+      text-align: center;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #222;
+    }
+
+    .comprobante header h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      margin: 0;
+    }
+
+    .comprobante header p {
+      margin: 5px 0;
+    }
+
+    .datos, .totales {
+      margin: 20px 0;
+    }
+
+    .datos div, .totales div {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 8px 0;
+    }
+
+    .datos dt, .totales dt {
+      font-weight: bold;
+    }
+
+    .datos dd, .totales dd {
+      margin: 0;
+      text-align: right;
+    }
+
+    .comprobante table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .comprobante th, .comprobante td {
+      padding: 12px 8px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .comprobante .der {
+      text-align: right;
+    }
+
+    .totales {
+      max-width: 350px;
+      margin-left: auto;
+    }
+
+    .totales .total {
+      font-size: 20px;
+      font-weight: bold;
+      border-top: 2px solid #222;
+      border-bottom: 2px solid #222;
+    }
+
+    .comprobante footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px dashed #888;
+      font-weight: bold;
+    }
+
+    .acciones-comprobante {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+      }
+
+      .acciones-comprobante,
+      .barra-lateral,
+      nav,
+      aside,
+      .menu,
+      .encabezado {
+        display: none !important;
+      }
+
+      .contenido {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .comprobante {
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      .comprobante {
+        padding: 15px;
+      }
+
+      .comprobante table {
+        font-size: 13px;
+      }
+
+      .comprobante th, .comprobante td {
+        padding: 8px 4px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-  <main class="contenido">
-    <h1 class="titulo">Comprobante de venta</h1>
+<main class="contenido">
 
-    <!-- El botón Imprimir abre el diálogo del navegador; al imprimir se ocultan menús y botones. -->
-    <article class="comprobante" aria-label="Comprobante de la venta 1048">
-      <header>
-        <h2>Instrumentos Sintek</h2>
-        <p>Sucursal Centro · Comprobante de venta</p>
-      </header>
-      <dl class="datos">
-        <div><dt>Folio</dt><dd>#1048</dd></div>
-        <div><dt>Fecha</dt><dd>31/10/2026 · 12:42</dd></div>
-        <div><dt>Cliente</dt><dd>Público en general</dd></div>
-        <div><dt>Atendió</dt><dd>Ana Torres</dd></div>
-      </dl>
-      <table>
-        <thead><tr><th scope="col">Producto</th><th scope="col" class="der">Cant.</th><th scope="col" class="der">Importe</th></tr></thead>
-        <tbody>
-          <tr><td>Guitarra acústica Fender CD-60</td><td class="der">1</td><td class="der">$4,890.00</td></tr>
-          <tr><td>Cuerdas D’Addario EXP16</td><td class="der">2</td><td class="der">$570.00</td></tr>
-          <tr><td>Púas Fender (paquete de 12)</td><td class="der">3</td><td class="der">$285.00</td></tr>
-        </tbody>
-      </table>
-      <dl class="totales">
-        <div><dt>Subtotal</dt><dd>$5,745.00</dd></div>
-        <div><dt>IVA (16%)</dt><dd>$919.20</dd></div>
-        <div class="total"><dt>TOTAL</dt><dd>$6,664.20</dd></div>
-        <div><dt>Pago en efectivo</dt><dd>$7,000.00</dd></div>
-        <div><dt>Cambio</dt><dd>$335.80</dd></div>
-      </dl>
-      <footer>¡Gracias por tu compra!</footer>
-    </article>
-    <div class="acciones-comprobante">
-      <a href="historial-ventas.html" class="boton boton--contorno">Volver al historial</a>
-      <button type="button" class="boton" onclick="window.print()">Imprimir</button>
-    </div>
-  </main>
+  <h1 class="titulo">Comprobante de venta</h1>
+
+  <article class="comprobante" aria-label="Comprobante de venta">
+
+    <header>
+      <h2>Instrumentos Sintec</h2>
+      <p>Sucursal Centro · Comprobante de venta</p>
+    </header>
+
+    <dl class="datos">
+      <div>
+        <dt>Folio</dt>
+        <dd>#1048</dd>
+      </div>
+
+      <div>
+        <dt>Fecha</dt>
+        <dd>31/10/2026 · 12:42</dd>
+      </div>
+
+      <div>
+        <dt>Cliente</dt>
+        <dd>Público en general</dd>
+      </div>
+
+      <div>
+        <dt>Atendió</dt>
+        <dd>Ana Torres</dd>
+      </div>
+    </dl>
+
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Producto</th>
+          <th scope="col" class="der">Cant.</th>
+          <th scope="col" class="der">Importe</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Guitarra acústica Fender CD-60</td>
+          <td class="der">1</td>
+          <td class="der">$4,890.00</td>
+        </tr>
+
+        <tr>
+          <td>Cuerdas D’Addario EXP16</td>
+          <td class="der">2</td>
+          <td class="der">$570.00</td>
+        </tr>
+
+        <tr>
+          <td>Púas Fender (paquete de 12)</td>
+          <td class="der">3</td>
+          <td class="der">$285.00</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <dl class="totales">
+      <div>
+        <dt>Subtotal</dt>
+        <dd>$5,745.00</dd>
+      </div>
+
+      <div>
+        <dt>IVA (16%)</dt>
+        <dd>$919.20</dd>
+      </div>
+
+      <div class="total">
+        <dt>TOTAL</dt>
+        <dd>$6,664.20</dd>
+      </div>
+
+      <div>
+        <dt>Pago en efectivo</dt>
+        <dd>$7,000.00</dd>
+      </div>
+
+      <div>
+        <dt>Cambio</dt>
+        <dd>$335.80</dd>
+      </div>
+    </dl>
+
+    <footer>
+      ¡Gracias por tu compra!
+    </footer>
+
+  </article>
+
+  <div class="acciones-comprobante">
+    <a href="historial-ventas.html" class="boton boton--contorno">
+      Volver al historial
+    </a>
+
+    <button type="button" class="boton" onclick="window.print()">
+      Imprimir
+    </button>
+  </div>
+
+</main>
 
 </body>
 </html>

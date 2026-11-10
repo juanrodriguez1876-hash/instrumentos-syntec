@@ -1,44 +1,243 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clientes | Instrumentos Sintek</title>
+  <title>Clientes | Instrumentos Sintec</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
-  <script src="layout.js"></script>
+  <script src="layout.js" defer></script>
 </head>
 <body>
 
-  <main class="contenido">
-    <!-- Datos de ejemplo. "Dar de baja" NO borra: el cliente pasa a Inactivo y sus ventas se conservan. "Público en general" es el cliente de las ventas sin registro. -->
-    <div class="barra-accion"><a href="registrar-cliente.html" class="enlace-accion">Registrar cliente <span class="icono-mas" aria-hidden="true">+</span></a></div>
-    <h1 class="titulo">Clientes</h1>
+<main class="contenido">
 
-    <div class="herramientas">
-      <input type="search" placeholder="Buscar por nombre o teléfono" aria-label="Buscar por nombre o teléfono">
-      <div class="seg" role="group" aria-label="Filtrar por estado"><button type="button" aria-pressed="true">Todos</button><button type="button" aria-pressed="false">Activos</button><button type="button" aria-pressed="false">Inactivos</button></div>
-    </div>
+  <div class="barra-accion">
+    <a href="registrar-cliente.html" class="enlace-accion">
+      Registrar cliente <span class="icono-mas" aria-hidden="true">+</span>
+    </a>
+  </div>
 
-    <div class="tabla-contenedor">
-      <table class="tabla tabla--tarjetas" aria-label="Clientes registrados">
-        <thead><tr><th scope="col">Cliente</th><th scope="col">Teléfono</th><th scope="col">Correo</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
-        <tbody>
-          <tr><td data-label="Cliente"><b>Público en general</b><small>Cliente del sistema para ventas sin registro</small></td><td data-label="Teléfono">—</td><td data-label="Correo">—</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><span class="nota">No se puede editar</span></td></tr>
-          <tr><td data-label="Cliente"><span class="quien"><i aria-hidden="true">MF</i><span><b>María Fernanda Ruiz</b></span></span></td><td data-label="Teléfono">33 2145 8890</td><td data-label="Correo">mferuiz@correo.com</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="registrar-cliente.html?id=1" class="boton boton--chico boton--contorno" aria-label="Editar a María Fernanda Ruiz">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a María Fernanda Ruiz"
-                        onclick="return confirm('¿Dar de baja a María Fernanda Ruiz? Sus ventas anteriores se conservan.')">Dar de baja</button></form></td></tr>
-          <tr><td data-label="Cliente"><span class="quien"><i aria-hidden="true">JS</i><span><b>Jorge Salazar</b></span></span></td><td data-label="Teléfono">33 7712 0045</td><td data-label="Correo">jsalazar@correo.com</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="registrar-cliente.html?id=2" class="boton boton--chico boton--contorno" aria-label="Editar a Jorge Salazar">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a Jorge Salazar"
-                        onclick="return confirm('¿Dar de baja a Jorge Salazar? Sus ventas anteriores se conservan.')">Dar de baja</button></form></td></tr>
-          <tr><td data-label="Cliente"><span class="quien"><i aria-hidden="true">CA</i><span><b>Colegio Alameda</b></span></span></td><td data-label="Teléfono">33 3000 1122</td><td data-label="Correo">compras@alameda.edu.mx</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="registrar-cliente.html?id=3" class="boton boton--chico boton--contorno" aria-label="Editar a Colegio Alameda">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a Colegio Alameda"
-                        onclick="return confirm('¿Dar de baja a Colegio Alameda? Sus ventas anteriores se conservan.')">Dar de baja</button></form></td></tr>
-          <tr class=inactiva><td data-label="Cliente"><span class="quien"><i aria-hidden="true">LO</i><span><b>Luis Ortega</b></span></span></td><td data-label="Teléfono">33 6650 3318</td><td data-label="Correo">—</td><td data-label="Estado"><span class="estado estado--neu">Inactivo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="registrar-cliente.html?id=4" class="boton boton--chico boton--contorno" aria-label="Editar a Luis Ortega">Editar</a><button type="submit" class="boton boton--chico " aria-label="Reactivar a Luis Ortega">Reactivar</button></form></td></tr>
-        </tbody>
-      </table>
+  <h1 class="titulo">Clientes</h1>
+
+  <div class="herramientas">
+    <input type="search" id="buscarCliente"
+      placeholder="Buscar por nombre o teléfono"
+      aria-label="Buscar por nombre o teléfono">
+
+    <div class="seg" role="group" aria-label="Filtrar por estado">
+      <button type="button" class="filtro" data-filtro="Todos" aria-pressed="true">Todos</button>
+      <button type="button" class="filtro" data-filtro="Activo" aria-pressed="false">Activos</button>
+      <button type="button" class="filtro" data-filtro="Inactivo" aria-pressed="false">Inactivos</button>
     </div>
-  </main>
+  </div>
+
+  <div class="tabla-contenedor">
+    <table class="tabla tabla--tarjetas" aria-label="Clientes registrados">
+      <thead>
+        <tr>
+          <th scope="col">Cliente</th>
+          <th scope="col">Teléfono</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaClientes"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+let clientes = JSON.parse(localStorage.getItem("clientesSintec")) || [
+  {
+    id: 0,
+    nombre: "Público en general",
+    telefono: "—",
+    correo: "—",
+    estado: "Activo",
+    fijo: true
+  },
+  {
+    id: 1,
+    nombre: "María Fernanda Ruiz",
+    telefono: "33 2145 8890",
+    correo: "mferuiz@correo.com",
+    estado: "Activo"
+  },
+  {
+    id: 2,
+    nombre: "Jorge Salazar",
+    telefono: "33 7712 0045",
+    correo: "jsalazar@correo.com",
+    estado: "Activo"
+  },
+  {
+    id: 3,
+    nombre: "Colegio Alameda",
+    telefono: "33 3000 1122",
+    correo: "compras@alameda.edu.mx",
+    estado: "Activo"
+  },
+  {
+    id: 4,
+    nombre: "Luis Ortega",
+    telefono: "33 6650 3318",
+    correo: "—",
+    estado: "Inactivo"
+  }
+];
+
+let filtroActual = "Todos";
+
+function guardarClientes() {
+  localStorage.setItem("clientesSintec", JSON.stringify(clientes));
+}
+
+function iniciales(nombre) {
+  return nombre.split(" ")
+    .filter(palabra => palabra.length > 0)
+    .map(palabra => palabra[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function mostrarClientes() {
+  const tabla = document.getElementById("tablaClientes");
+  const busqueda = document.getElementById("buscarCliente").value.toLowerCase();
+
+  tabla.innerHTML = "";
+
+  const filtrados = clientes.filter(cliente => {
+    const coincideTexto =
+      cliente.nombre.toLowerCase().includes(busqueda) ||
+      cliente.telefono.toLowerCase().includes(busqueda);
+
+    const coincideEstado =
+      filtroActual === "Todos" || cliente.estado === filtroActual;
+
+    return coincideTexto && coincideEstado;
+  });
+
+  if (filtrados.length === 0) {
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="5">No se encontraron clientes.</td>
+      </tr>`;
+    return;
+  }
+
+  filtrados.forEach(cliente => {
+    const fila = document.createElement("tr");
+
+    if (cliente.estado === "Inactivo") {
+      fila.classList.add("inactiva");
+    }
+
+    const nombreHTML = cliente.fijo
+      ? `<b>${cliente.nombre}</b>
+         <small>Cliente del sistema para ventas sin registro</small>`
+      : `<span class="quien">
+           <i aria-hidden="true">${iniciales(cliente.nombre)}</i>
+           <span><b>${cliente.nombre}</b></span>
+         </span>`;
+
+    let acciones = "";
+
+    if (cliente.fijo) {
+      acciones = `<span class="nota">No se puede editar</span>`;
+    } else if (cliente.estado === "Activo") {
+      acciones = `
+        <div class="acciones-fila">
+          <a href="registrar-cliente.html?id=${cliente.id}"
+             class="boton boton--chico boton--contorno">
+             Editar
+          </a>
+          <button type="button"
+             class="boton boton--chico boton--peligro"
+             onclick="cambiarEstado(${cliente.id})">
+             Dar de baja
+          </button>
+        </div>`;
+    } else {
+      acciones = `
+        <div class="acciones-fila">
+          <a href="registrar-cliente.html?id=${cliente.id}"
+             class="boton boton--chico boton--contorno">
+             Editar
+          </a>
+          <button type="button"
+             class="boton boton--chico"
+             onclick="cambiarEstado(${cliente.id})">
+             Reactivar
+          </button>
+        </div>`;
+    }
+
+    fila.innerHTML = `
+      <td data-label="Cliente">${nombreHTML}</td>
+      <td data-label="Teléfono">${cliente.telefono}</td>
+      <td data-label="Correo">${cliente.correo}</td>
+      <td data-label="Estado">
+        <span class="estado ${cliente.estado === "Activo" ? "estado--ok" : "estado--neu"}">
+          ${cliente.estado}
+        </span>
+      </td>
+      <td data-label="Acciones">${acciones}</td>
+    `;
+
+    tabla.appendChild(fila);
+  });
+}
+
+function cambiarEstado(id) {
+  const cliente = clientes.find(c => c.id === id);
+
+  if (!cliente) return;
+
+  if (cliente.estado === "Activo") {
+    const confirmar = confirm(
+      `¿Dar de baja a ${cliente.nombre}? Sus ventas anteriores se conservan.`
+    );
+
+    if (!confirmar) return;
+
+    cliente.estado = "Inactivo";
+  } else {
+    const confirmar = confirm(`¿Reactivar a ${cliente.nombre}?`);
+
+    if (!confirmar) return;
+
+    cliente.estado = "Activo";
+  }
+
+  guardarClientes();
+  mostrarClientes();
+}
+
+document.getElementById("buscarCliente").addEventListener("input", mostrarClientes);
+
+document.querySelectorAll(".filtro").forEach(boton => {
+  boton.addEventListener("click", () => {
+    filtroActual = boton.dataset.filtro;
+
+    document.querySelectorAll(".filtro").forEach(b => {
+      b.setAttribute("aria-pressed", b === boton ? "true" : "false");
+    });
+
+    mostrarClientes();
+  });
+});
+
+guardarClientes();
+mostrarClientes();
+</script>
 
 </body>
 </html>

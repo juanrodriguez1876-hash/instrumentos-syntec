@@ -1,44 +1,325 @@
-!DOCTYPE html>
+!
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ajustar stock | Instrumentos Sintek</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustar stock | Instrumentos Sintec</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilos.css">
-  <script src="layout.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="estilos.css">
+<script src="layout.js" defer></script>
+
 </head>
 <body>
 
-  <main class="contenido">
-    <h1 class="titulo">Ajustar stock</h1>
+<main class="contenido">
 
-    <!-- Regla: el stock nunca queda negativo. Cada ajuste se guardará en una bitácora (quién, cuándo y por qué). -->
-    <form class="formulario formulario--doble" action="existencias.html" method="get">
-      <p class="nota-campos"><span class="requerido" aria-hidden="true">*</span> Campos obligatorios</p>
-      <div class="campo campo--ancho"><label for="producto">Producto <span class="requerido" aria-hidden="true">*</span></label><select id="producto" name="producto" required><option value="" disabled selected>Selecciona un producto</option><option value="1">Guitarra eléctrica</option><option value="2">Guitarra acústica</option><option value="3">Saxofón alto</option></select></div>
-      <div class="comparacion campo--ancho" aria-live="polite">
-        <div><span>Stock actual</span><b>15</b></div>
-        <div><span>Stock después del ajuste</span><b>18</b></div>
-      </div>
-      <div class="campo"><label id="tipo-et">Tipo de movimiento <span class="requerido" aria-hidden="true">*</span></label>
-        <div class="opciones" role="radiogroup" aria-labelledby="tipo-et">
-          <label><input type="radio" name="tipo" value="entrada" checked> Entrada</label>
-          <label><input type="radio" name="tipo" value="salida"> Salida</label>
-          <label><input type="radio" name="tipo" value="correccion"> Corrección</label>
-        </div></div>
-      <div class="campo"><label for="cantidad">Cantidad <span class="requerido" aria-hidden="true">*</span></label><input type="number" id="cantidad" name="cantidad" required min="1" value="3"><small>Una salida no puede dejar el stock en negativo.</small></div>
-      <div class="campo campo--ancho"><label for="motivo">Motivo <span class="requerido" aria-hidden="true">*</span></label><select id="motivo" name="motivo" required><option value="" disabled selected>Selecciona un motivo</option><option value="conteo">Conteo físico</option><option value="danado">Producto dañado</option><option value="devolucion">Devolución de cliente</option><option value="otro">Otro</option></select></div>
-      <div class="campo campo--ancho"><label for="nota">Nota (opcional)</label><input type="text" id="nota" name="nota" placeholder="Detalle del ajuste"></div>
-      <div class="acciones">
-        <a href="existencias.html" class="boton boton--contorno">Cancelar</a>
-        <button type="submit" class="boton">Guardar ajuste</button>
-      </div>
-    </form>
-  </main>
+<h1 class="titulo">Ajustar stock</h1>
+
+<form class="formulario formulario--doble" id="formStock">
+
+<p class="nota-campos">
+<span class="requerido">*</span> Campos obligatorios
+</p>
+
+<div class="campo campo--ancho">
+<label for="producto">Producto <span class="requerido">*</span></label>
+
+<select id="producto" required>
+<option value="" disabled selected>Selecciona un producto</option>
+<option value="1">Guitarra eléctrica</option>
+<option value="2">Guitarra acústica</option>
+<option value="3">Saxofón alto</option>
+</select>
+</div>
+
+<div class="comparacion campo--ancho" aria-live="polite">
+<div>
+<span>Stock actual</span>
+<b id="stockActual">0</b>
+</div>
+
+<div>
+<span>Stock después del ajuste</span>
+<b id="stockNuevo">0</b>
+</div>
+</div>
+
+<div class="campo">
+
+<label>Tipo de movimiento <span class="requerido">*</span></label>
+
+<div class="opciones">
+<label><input type="radio" name="tipo" value="entrada" checked> Entrada</label>
+<label><input type="radio" name="tipo" value="salida"> Salida</label>
+<label><input type="radio" name="tipo" value="correccion"> Corrección</label>
+</div>
+
+</div>
+
+<div class="campo">
+<label for="cantidad">Cantidad <span class="requerido">*</span></label>
+<input type="number" id="cantidad" min="1" required placeholder="Ingresa una cantidad">
+<small id="ayudaCantidad">Una salida no puede dejar el stock en negativo.</small>
+</div>
+
+<div class="campo campo--ancho">
+<label for="motivo">Motivo <span class="requerido">*</span></label>
+
+<select id="motivo" required>
+<option value="" disabled selected>Selecciona un motivo</option>
+<option value="Conteo físico">Conteo físico</option>
+<option value="Producto dañado">Producto dañado</option>
+<option value="Devolución de cliente">Devolución de cliente</option>
+<option value="Otro">Otro</option>
+</select>
+</div>
+
+<div class="campo campo--ancho">
+<label for="nota">Nota (opcional)</label>
+<input type="text" id="nota" placeholder="Detalle del ajuste">
+</div>
+
+<div class="acciones">
+<a href="existencias.html" class="boton boton--contorno">Cancelar</a>
+<button type="submit" class="boton">Guardar ajuste</button>
+</div>
+
+</form>
+
+<section style="margin-top:35px;">
+<h2>Bitácora de movimientos</h2>
+<div id="bitacora">
+<p>No hay movimientos registrados.</p>
+</div>
+</section>
+
+</main>
+
+<script>
+
+// Inventario inicial
+const inventarioInicial = {
+"1": 15,
+"2": 20,
+"3": 10
+};
+
+// Recuperar información
+let inventario = JSON.parse(
+localStorage.getItem("inventarioSintec")
+) || {...inventarioInicial};
+
+let movimientos = JSON.parse(
+localStorage.getItem("bitacoraSintec")
+) || [];
+
+const formulario = document.getElementById("formStock");
+const producto = document.getElementById("producto");
+const cantidad = document.getElementById("cantidad");
+const motivo = document.getElementById("motivo");
+const nota = document.getElementById("nota");
+
+const nombresProductos = {
+"1": "Guitarra eléctrica",
+"2": "Guitarra acústica",
+"3": "Saxofón alto"
+};
+
+// Obtener tipo de movimiento
+function obtenerTipo() {
+return document.querySelector('input[name="tipo"]:checked').value;
+}
+
+// Calcular stock
+function calcularStock() {
+
+const id = producto.value;
+const tipo = obtenerTipo();
+const numero = Number(cantidad.value);
+
+if (!id) {
+document.getElementById("stockActual").textContent = 0;
+document.getElementById("stockNuevo").textContent = 0;
+return;
+}
+
+const actual = inventario[id] ?? 0;
+
+document.getElementById("stockActual").textContent = actual;
+
+if (cantidad.value === "") {
+document.getElementById("stockNuevo").textContent = actual;
+return;
+}
+
+let nuevo = actual;
+
+if (tipo === "entrada") nuevo = actual + numero;
+if (tipo === "salida") nuevo = actual - numero;
+if (tipo === "correccion") nuevo = numero;
+
+const resultado = document.getElementById("stockNuevo");
+resultado.textContent = nuevo;
+resultado.style.color = nuevo < 0 ? "red" : "";
+
+}
+
+// Actualizar tipo
+function actualizarTipo() {
+
+const tipo = obtenerTipo();
+const ayuda = document.getElementById("ayudaCantidad");
+
+if (tipo === "correccion") {
+cantidad.min = 0;
+cantidad.placeholder = "Ingresa el stock correcto";
+ayuda.textContent = "Escribe el stock total real que existe físicamente.";
+} else {
+cantidad.min = 1;
+cantidad.placeholder = "Ingresa una cantidad";
+ayuda.textContent = "Una salida no puede dejar el stock en negativo.";
+}
+
+calcularStock();
+}
+
+// Eventos
+producto.addEventListener("change", calcularStock);
+cantidad.addEventListener("input", calcularStock);
+
+document.querySelectorAll('input[name="tipo"]').forEach(radio => {
+radio.addEventListener("change", actualizarTipo);
+});
+
+// Guardar información
+function guardarDatos() {
+
+localStorage.setItem("inventarioSintec", JSON.stringify(inventario));
+localStorage.setItem("bitacoraSintec", JSON.stringify(movimientos));
+
+}
+
+// Mostrar bitácora
+function mostrarBitacora() {
+
+const contenedor = document.getElementById("bitacora");
+contenedor.innerHTML = "";
+
+if (movimientos.length === 0) {
+contenedor.textContent = "No hay movimientos registrados.";
+return;
+}
+
+movimientos.slice().reverse().forEach(m => {
+
+const registro = document.createElement("div");
+registro.style.padding = "12px";
+registro.style.marginBottom = "10px";
+registro.style.borderBottom = "1px solid #ccc";
+
+const titulo = document.createElement("strong");
+titulo.textContent = m.producto + " - " + m.tipo;
+
+const detalle = document.createElement("p");
+detalle.textContent =
+"Cantidad: " + m.cantidad +
+" | Stock anterior: " + m.anterior +
+" | Stock nuevo: " + m.nuevo;
+
+const razon = document.createElement("p");
+razon.textContent = "Motivo: " + m.motivo;
+
+const observacion = document.createElement("p");
+observacion.textContent = "Nota: " + (m.nota || "Sin nota");
+
+const fecha = document.createElement("small");
+fecha.textContent = "Fecha: " + m.fecha;
+
+registro.append(titulo, detalle, razon, observacion, fecha);
+contenedor.appendChild(registro);
+
+});
+
+}
+
+// Guardar ajuste
+formulario.addEventListener("submit", function(event) {
+
+event.preventDefault();
+
+const id = producto.value;
+const tipo = obtenerTipo();
+const numero = Number(cantidad.value);
+const razon = motivo.value;
+
+if (!id || !razon || cantidad.value === "") {
+alert("Completa todos los campos obligatorios.");
+return;
+}
+
+if (!Number.isFinite(numero) || numero < 0) {
+alert("Ingresa una cantidad válida.");
+return;
+}
+
+if (tipo !== "correccion" && numero < 1) {
+alert("La cantidad debe ser mayor que cero.");
+return;
+}
+
+const anterior = inventario[id] ?? 0;
+let nuevo = anterior;
+
+if (tipo === "entrada") nuevo = anterior + numero;
+if (tipo === "salida") nuevo = anterior - numero;
+if (tipo === "correccion") nuevo = numero;
+
+if (nuevo < 0) {
+alert("No puedes dejar el stock en negativo.");
+return;
+}
+
+// Actualizar inventario
+inventario[id] = nuevo;
+
+// Registrar movimiento
+movimientos.push({
+producto: nombresProductos[id],
+tipo: tipo,
+cantidad: numero,
+anterior: anterior,
+nuevo: nuevo,
+motivo: razon,
+nota: nota.value.trim(),
+fecha: new Date().toLocaleString("es-MX")
+});
+
+// Guardar cambios
+guardarDatos();
+mostrarBitacora();
+calcularStock();
+
+alert("¡Ajuste guardado correctamente!");
+
+// Limpiar formulario
+cantidad.value = "";
+motivo.value = "";
+nota.value = "";
+
+calcularStock();
+
+});
+
+// Iniciar
+mostrarBitacora();
+
+</script>
 
 </body>
 </html>

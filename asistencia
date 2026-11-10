@@ -1,35 +1,463 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Asistencia | Instrumentos Sintek</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="estilos.css">
-  <script src="layout.js"></script>
+<title>Asistencia | Instrumentos Sintec</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="estilos.css">
+<script src="layout.js" defer></script>
 </head>
+
 <body>
 
-  <main class="contenido">
-    <!-- Datos de ejemplo. Cada botón guardará la hora actual en la tabla de asistencia. -->
-    <h1 class="titulo">Asistencia</h1>
+<main class="contenido">
 
-    <p class="nota">Sábado 31 de octubre de 2026 · La hora se guarda automáticamente al pulsar el botón.</p>
-    <div class="tabla-contenedor">
-      <table class="tabla tabla--tarjetas" aria-label="Asistencia de hoy">
-        <thead><tr><th scope="col">Empleado</th><th scope="col">Entrada</th><th scope="col">Salida</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
-        <tbody>
-          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">AT</i><span><b>Ana Torres</b></span></span></td><td data-label="Entrada">9:02 a. m.</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--ok">Presente</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar salida de Ana Torres">Registrar salida</button></form></td></tr>
-          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">LO</i><span><b>Luis Ortega</b></span></span></td><td data-label="Entrada">9:10 a. m.</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--ok">Presente</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar salida de Luis Ortega">Registrar salida</button></form></td></tr>
-          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">SM</i><span><b>Sofía Medina</b></span></span></td><td data-label="Entrada">—</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--poco">Sin registrar</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><button type="submit" class="boton boton--chico " aria-label="Registrar entrada de Sofía Medina">Registrar entrada</button></form></td></tr>
-          <tr class=inactiva><td data-label="Empleado"><span class="quien"><i aria-hidden="true">DR</i><span><b>Diego Ramos</b></span></span></td><td data-label="Entrada">—</td><td data-label="Salida">—</td><td data-label="Estado"><span class="estado estado--neu">Inactivo</span></td><td data-label="Acciones"><span class="nota">Sin acciones</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </main>
+<h1 class="titulo">Asistencia</h1>
+
+<p class="nota">
+<span id="fechaActual"></span>
+· La hora se guarda automáticamente al pulsar el botón.
+</p>
+
+<div class="tabla-contenedor">
+
+<table class="tabla tabla--tarjetas" aria-label="Asistencia de hoy">
+
+<thead>
+<tr>
+<th scope="col">Empleado</th>
+<th scope="col">Entrada</th>
+<th scope="col">Salida</th>
+<th scope="col">Estado</th>
+<th scope="col">Acciones</th>
+</tr>
+</thead>
+
+<tbody id="tablaAsistencia"></tbody>
+
+</table>
+
+</div>
+
+<section style="margin-top:35px;">
+
+<h2>Resumen de asistencia</h2>
+
+<div class="comparacion">
+
+<div>
+<span>Presentes</span>
+<b id="totalPresentes">0</b>
+</div>
+
+<div>
+<span>Sin registrar</span>
+<b id="totalSinRegistrar">0</b>
+</div>
+
+<div>
+<span>Inactivos</span>
+<b id="totalInactivos">0</b>
+</div>
+
+</div>
+
+</section>
+
+<section style="margin-top:35px;">
+
+<h2>Historial de asistencia</h2>
+
+<div id="historial">
+<p>No hay registros anteriores.</p>
+</div>
+
+</section>
+
+</main>
+
+<script>
+
+// Lista de empleados
+const empleados = [
+{ id: 1, nombre: "Ana Torres", iniciales: "AT", activo: true },
+{ id: 2, nombre: "Luis Ortega", iniciales: "LO", activo: true },
+{ id: 3, nombre: "Sofía Medina", iniciales: "SM", activo: true },
+{ id: 4, nombre: "Diego Ramos", iniciales: "DR", activo: false }
+];
+
+// Obtener fecha local
+function obtenerFecha() {
+
+const hoy = new Date();
+
+const anio = hoy.getFullYear();
+const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+const dia = String(hoy.getDate()).padStart(2, "0");
+
+return `${anio}-${mes}-${dia}`;
+
+}
+
+// Obtener hora actual
+function obtenerHora() {
+
+return new Date().toLocaleTimeString("es-MX", {
+hour: "numeric",
+minute: "2-digit",
+hour12: true
+});
+
+}
+
+// Mostrar fecha
+function mostrarFecha() {
+
+const fecha = new Date();
+
+document.getElementById("fechaActual").textContent =
+fecha.toLocaleDateString("es-MX", {
+weekday: "long",
+day: "numeric",
+month: "long",
+year: "numeric"
+});
+
+}
+
+// Recuperar asistencia del día
+const fechaHoy = obtenerFecha();
+const clave = "asistenciaSintec_" + fechaHoy;
+
+let asistencia = JSON.parse(
+localStorage.getItem(clave)
+) || {};
+
+// Recuperar historial
+let historial = JSON.parse(
+localStorage.getItem("historialSintec")
+) || [];
+
+// Guardar datos
+function guardarAsistencia() {
+
+localStorage.setItem(
+clave,
+JSON.stringify(asistencia)
+);
+
+localStorage.setItem(
+"historialSintec",
+JSON.stringify(historial)
+);
+
+}
+
+// Mostrar tabla
+function mostrarAsistencia() {
+
+const tabla = document.getElementById("tablaAsistencia");
+
+tabla.innerHTML = "";
+
+empleados.forEach(empleado => {
+
+const registro = asistencia[empleado.id];
+
+const entrada = registro ? registro.entrada : null;
+const salida = registro ? registro.salida : null;
+
+let estado = "Sin registrar";
+let claseEstado = "estado--poco";
+
+if (!empleado.activo) {
+
+estado = "Inactivo";
+claseEstado = "estado--neu";
+
+} else if (entrada && salida) {
+
+estado = "Salida registrada";
+claseEstado = "estado--neu";
+
+} else if (entrada) {
+
+estado = "Presente";
+claseEstado = "estado--ok";
+
+}
+
+let accion = "";
+
+if (!empleado.activo) {
+
+accion = '<span class="nota">Sin acciones</span>';
+
+} else if (!entrada) {
+
+accion = `
+<button type="button"
+class="boton boton--chico"
+data-id="${empleado.id}"
+data-accion="entrada">
+Registrar entrada
+</button>`;
+
+} else if (!salida) {
+
+accion = `
+<button type="button"
+class="boton boton--chico"
+data-id="${empleado.id}"
+data-accion="salida">
+Registrar salida
+</button>`;
+
+} else {
+
+accion = '<span class="nota">Jornada finalizada</span>';
+
+}
+
+// Crear fila
+const fila = document.createElement("tr");
+
+if (!empleado.activo) {
+fila.classList.add("inactiva");
+}
+
+const celdaEmpleado = document.createElement("td");
+celdaEmpleado.dataset.label = "Empleado";
+
+const quien = document.createElement("span");
+quien.className = "quien";
+
+const iniciales = document.createElement("i");
+iniciales.textContent = empleado.iniciales;
+
+const nombre = document.createElement("span");
+const negrita = document.createElement("b");
+negrita.textContent = empleado.nombre;
+
+nombre.appendChild(negrita);
+quien.append(iniciales, nombre);
+celdaEmpleado.appendChild(quien);
+
+const celdaEntrada = document.createElement("td");
+celdaEntrada.dataset.label = "Entrada";
+celdaEntrada.textContent = entrada || "—";
+
+const celdaSalida = document.createElement("td");
+celdaSalida.dataset.label = "Salida";
+celdaSalida.textContent = salida || "—";
+
+const celdaEstado = document.createElement("td");
+celdaEstado.dataset.label = "Estado";
+
+const etiqueta = document.createElement("span");
+etiqueta.className = "estado " + claseEstado;
+etiqueta.textContent = estado;
+
+celdaEstado.appendChild(etiqueta);
+
+const celdaAcciones = document.createElement("td");
+celdaAcciones.dataset.label = "Acciones";
+celdaAcciones.innerHTML = accion;
+
+fila.append(
+celdaEmpleado,
+celdaEntrada,
+celdaSalida,
+celdaEstado,
+celdaAcciones
+);
+
+tabla.appendChild(fila);
+
+});
+
+actualizarResumen();
+
+}
+
+// Actualizar resumen
+function actualizarResumen() {
+
+let presentes = 0;
+let sinRegistrar = 0;
+let inactivos = 0;
+
+empleados.forEach(empleado => {
+
+const registro = asistencia[empleado.id];
+
+if (!empleado.activo) {
+
+inactivos++;
+
+} else if (registro && registro.entrada) {
+
+presentes++;
+
+} else {
+
+sinRegistrar++;
+
+}
+
+});
+
+document.getElementById("totalPresentes").textContent = presentes;
+
+document.getElementById("totalSinRegistrar").textContent =
+sinRegistrar;
+
+document.getElementById("totalInactivos").textContent = inactivos;
+
+}
+
+// Registrar entrada o salida
+document.getElementById("tablaAsistencia").addEventListener(
+"click",
+function(event) {
+
+const boton = event.target.closest("button[data-accion]");
+
+if (!boton) return;
+
+const id = boton.dataset.id;
+const accion = boton.dataset.accion;
+
+const empleado = empleados.find(
+persona => persona.id === Number(id)
+);
+
+if (!empleado || !empleado.activo) {
+
+alert("Este empleado no está activo.");
+return;
+
+}
+
+if (!asistencia[id]) {
+
+asistencia[id] = {
+entrada: null,
+salida: null
+};
+
+}
+
+const registro = asistencia[id];
+
+if (accion === "entrada") {
+
+if (registro.entrada) {
+
+alert("Este empleado ya tiene una entrada registrada.");
+return;
+
+}
+
+registro.entrada = obtenerHora();
+
+historial.push({
+empleado: empleado.nombre,
+tipo: "Entrada",
+hora: registro.entrada,
+fecha: fechaHoy
+});
+
+alert("Entrada registrada correctamente para " + empleado.nombre);
+
+} else if (accion === "salida") {
+
+if (!registro.entrada) {
+
+alert("Primero debes registrar la entrada.");
+return;
+
+}
+
+if (registro.salida) {
+
+alert("La salida ya fue registrada.");
+return;
+
+}
+
+registro.salida = obtenerHora();
+
+historial.push({
+empleado: empleado.nombre,
+tipo: "Salida",
+hora: registro.salida,
+fecha: fechaHoy
+});
+
+alert("Salida registrada correctamente para " + empleado.nombre);
+
+}
+
+guardarAsistencia();
+mostrarAsistencia();
+mostrarHistorial();
+
+});
+
+// Mostrar historial
+function mostrarHistorial() {
+
+const contenedor = document.getElementById("historial");
+
+contenedor.innerHTML = "";
+
+if (historial.length === 0) {
+
+contenedor.textContent = "No hay registros anteriores.";
+return;
+
+}
+
+historial.slice().reverse().forEach(registro => {
+
+const elemento = document.createElement("div");
+
+elemento.style.padding = "12px";
+elemento.style.marginBottom = "10px";
+elemento.style.borderBottom = "1px solid #ccc";
+
+const nombre = document.createElement("strong");
+nombre.textContent = registro.empleado;
+
+const detalle = document.createElement("p");
+detalle.textContent =
+registro.tipo + " registrada a las " + registro.hora;
+
+const fecha = document.createElement("small");
+fecha.textContent = "Fecha: " + registro.fecha;
+
+elemento.append(nombre, detalle, fecha);
+
+contenedor.appendChild(elemento);
+
+});
+
+}
+
+// Iniciar página
+mostrarFecha();
+mostrarAsistencia();
+mostrarHistorial();
+
+</script>
 
 </body>
 </html>
