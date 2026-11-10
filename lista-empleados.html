@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empleados | Instrumentos Sintek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+
+  <main class="contenido">
+    <!-- Datos de ejemplo. Dar de baja NO borra: el empleado pasa a Inactivo y sus ventas y asistencias se conservan. -->
+    <div class="barra-accion"><a href="nuevo-empleado.html" class="enlace-accion">Nuevo empleado <span class="icono-mas" aria-hidden="true">+</span></a></div>
+    <h1 class="titulo">Empleados</h1>
+
+    <div class="herramientas">
+      <input type="search" placeholder="Buscar por nombre" aria-label="Buscar por nombre">
+      <div class="seg" role="group" aria-label="Filtrar por estado"><button type="button" aria-pressed="true">Todos</button><button type="button" aria-pressed="false">Activos</button><button type="button" aria-pressed="false">Inactivos</button></div>
+    </div>
+
+    <div class="tabla-contenedor">
+      <table class="tabla tabla--tarjetas" aria-label="Empleados registrados">
+        <thead><tr><th scope="col">Empleado</th><th scope="col">Puesto</th><th scope="col">Teléfono</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">AT</i><span><b>Ana Torres</b></span></span></td><td data-label="Puesto">Administradora</td><td data-label="Teléfono">33 1010 2020</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="nuevo-empleado.html?id=1" class="boton boton--chico boton--contorno" aria-label="Editar a Ana Torres">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a Ana Torres"
+                        onclick="return confirm('¿Dar de baja a Ana Torres? Su historial se conserva.')">Dar de baja</button></form></td></tr>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">LO</i><span><b>Luis Ortega</b></span></span></td><td data-label="Puesto">Vendedor</td><td data-label="Teléfono">33 6650 3318</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="nuevo-empleado.html?id=2" class="boton boton--chico boton--contorno" aria-label="Editar a Luis Ortega">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a Luis Ortega"
+                        onclick="return confirm('¿Dar de baja a Luis Ortega? Su historial se conserva.')">Dar de baja</button></form></td></tr>
+          <tr><td data-label="Empleado"><span class="quien"><i aria-hidden="true">SM</i><span><b>Sofía Medina</b></span></span></td><td data-label="Puesto">Vendedora</td><td data-label="Teléfono">33 4455 9087</td><td data-label="Estado"><span class="estado estado--ok">Activo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="nuevo-empleado.html?id=3" class="boton boton--chico boton--contorno" aria-label="Editar a Sofía Medina">Editar</a><button type="submit" class="boton boton--chico boton--peligro" aria-label="Dar de baja a Sofía Medina"
+                        onclick="return confirm('¿Dar de baja a Sofía Medina? Su historial se conserva.')">Dar de baja</button></form></td></tr>
+          <tr class=inactiva><td data-label="Empleado"><span class="quien"><i aria-hidden="true">DR</i><span><b>Diego Ramos</b></span></span></td><td data-label="Puesto">Almacén</td><td data-label="Teléfono">33 2290 1176</td><td data-label="Estado"><span class="estado estado--neu">Inactivo</span></td><td data-label="Acciones"><form class="acciones-fila" action="#" method="post"><a href="nuevo-empleado.html?id=4" class="boton boton--chico boton--contorno" aria-label="Editar a Diego Ramos">Editar</a><button type="submit" class="boton boton--chico " aria-label="Reactivar a Diego Ramos">Reactivar</button></form></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+</body>
+</html>

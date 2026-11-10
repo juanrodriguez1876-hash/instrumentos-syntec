@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reporte de ventas | Instrumentos Sintek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+
+  <main class="contenido">
+    <!-- Datos de ejemplo. El botón de imprimir permite guardar el reporte como PDF desde el navegador. -->
+    <h1 class="titulo">Reporte de ventas</h1>
+
+    <p class="nota">Ventas por periodo · del 1 al 31 de octubre de 2026</p>
+    <section class="resumen-dia" aria-label="Resumen del periodo">
+      <div class="dato-dia"><span>Total vendido</span><b>$128,430.50</b><small>IVA incluido</small></div>
+      <div class="dato-dia"><span>Ventas realizadas</span><b>214</b><small>3 canceladas no cuentan</small></div>
+      <div class="dato-dia"><span>Ticket promedio</span><b>$600.14</b><small>Por venta</small></div>
+      <div class="dato-dia"><span>Mejor día</span><b>Vie 30</b><small>$9,410.00</small></div>
+    </section>
+    <section class="tarjeta">
+      <header><h2>Productos más vendidos</h2></header>
+      <div class="cuerpo" style="padding:0">
+    <div class="tabla-contenedor" style="border:0;box-shadow:none">
+      <table class="tabla tabla--tarjetas" aria-label="Productos más vendidos">
+        <thead><tr><th scope="col">Producto</th><th scope="col" class=numero>Unidades</th><th scope="col" class=numero>Importe</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Producto"><b>Cuerdas D’Addario EXP16</b></td><td class="numero" data-label="Unidades">96</td><td class="numero" data-label="Importe">$27,360.00</td></tr>
+          <tr><td data-label="Producto"><b>Púas Fender (paquete de 12)</b></td><td class="numero" data-label="Unidades">210</td><td class="numero" data-label="Importe">$19,950.00</td></tr>
+          <tr><td data-label="Producto"><b>Guitarra acústica</b></td><td class="numero" data-label="Unidades">11</td><td class="numero" data-label="Importe">$38,500.00</td></tr>
+          <tr><td data-label="Producto"><b>Afinador de clip</b></td><td class="numero" data-label="Unidades">64</td><td class="numero" data-label="Importe">$11,520.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+      </div>
+    </section>
+    <div class="acciones-comprobante">
+      <a href="generar-reportes.html" class="boton boton--contorno">Cambiar filtros</a>
+      <button type="button" class="boton" onclick="window.print()">Imprimir o guardar en PDF</button>
+    </div>
+  </main>
+
+</body>
+</html>

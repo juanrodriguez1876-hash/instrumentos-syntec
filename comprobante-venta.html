@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comprobante de venta | Instrumentos Sintek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+
+  <main class="contenido">
+    <h1 class="titulo">Comprobante de venta</h1>
+
+    <!-- El botón Imprimir abre el diálogo del navegador; al imprimir se ocultan menús y botones. -->
+    <article class="comprobante" aria-label="Comprobante de la venta 1048">
+      <header>
+        <h2>Instrumentos Sintek</h2>
+        <p>Sucursal Centro · Comprobante de venta</p>
+      </header>
+      <dl class="datos">
+        <div><dt>Folio</dt><dd>#1048</dd></div>
+        <div><dt>Fecha</dt><dd>31/10/2026 · 12:42</dd></div>
+        <div><dt>Cliente</dt><dd>Público en general</dd></div>
+        <div><dt>Atendió</dt><dd>Ana Torres</dd></div>
+      </dl>
+      <table>
+        <thead><tr><th scope="col">Producto</th><th scope="col" class="der">Cant.</th><th scope="col" class="der">Importe</th></tr></thead>
+        <tbody>
+          <tr><td>Guitarra acústica Fender CD-60</td><td class="der">1</td><td class="der">$4,890.00</td></tr>
+          <tr><td>Cuerdas D’Addario EXP16</td><td class="der">2</td><td class="der">$570.00</td></tr>
+          <tr><td>Púas Fender (paquete de 12)</td><td class="der">3</td><td class="der">$285.00</td></tr>
+        </tbody>
+      </table>
+      <dl class="totales">
+        <div><dt>Subtotal</dt><dd>$5,745.00</dd></div>
+        <div><dt>IVA (16%)</dt><dd>$919.20</dd></div>
+        <div class="total"><dt>TOTAL</dt><dd>$6,664.20</dd></div>
+        <div><dt>Pago en efectivo</dt><dd>$7,000.00</dd></div>
+        <div><dt>Cambio</dt><dd>$335.80</dd></div>
+      </dl>
+      <footer>¡Gracias por tu compra!</footer>
+    </article>
+    <div class="acciones-comprobante">
+      <a href="historial-ventas.html" class="boton boton--contorno">Volver al historial</a>
+      <button type="button" class="boton" onclick="window.print()">Imprimir</button>
+    </div>
+  </main>
+
+</body>
+</html>

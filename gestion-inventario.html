@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestión de inventario | Instrumentos Sintek</title>
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <a href="menu.html" class="boton-barra" aria-label="Ir al menú principal">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </a>
+    <svg class="logo" viewBox="0 0 64 72" role="img" aria-label="Logo Instrumentos Sintek">
+      <path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="#0b1f4b"/>
+      <text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#fff" font-family="Oswald, Arial, sans-serif">IS</text>
+    </svg>
+  </header>
+  <main class="contenido">
+    <h1 class="titulo">Gestión de inventario
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 3 7.5v9L12 21l9-4.5v-9z"/><path d="M3 7.5 12 12l9-4.5"/><path d="M12 12v9"/></svg>
+    </h1>
+    <div class="tabla-contenedor">
+      <table class="tabla" aria-label="Productos del inventario">
+        <thead><tr><th scope="col">Producto</th><th scope="col" class="numero">Precio</th><th scope="col">Modelo</th><th scope="col">ID</th><th scope="col" class="descripcion">Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Guitarra acústica</td><td class="numero">$3,500.00</td><td>GRS-325</td><td>23564</td><td class="descripcion">Guitarra acústica de madera de pino, cuerdas de calibre 12-47, estilo flamenco, color cedro.</td></tr>
+          <tr><td>Violín</td><td class="numero">$5,700.00</td><td>Mozart Edition</td><td>23878</td><td class="descripcion">Violín de madera de pino, cuerdas de nylon y acero, arco de madera, color negro.</td></tr>
+          <tr><td>Ukelele</td><td class="numero">$2,500.00</td><td>Hawaiian Series</td><td>23654</td><td class="descripcion">Ukelele tamaño soprano con cuerpo de caoba y acabado brillante.</td></tr>
+          <tr><td>Saxofón</td><td class="numero">$8,500.00</td><td>Jazzmaster</td><td>23456</td><td class="descripcion">Saxofón alto con acabado dorado, boquilla y estuche incluidos.</td></tr>
+          <tr><td>Piano</td><td class="numero">$60,000.00</td><td>Classic Series</td><td>23903</td><td class="descripcion">Piano vertical de madera con 88 teclas y tres pedales.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>
