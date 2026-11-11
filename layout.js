@@ -1,15 +1,7 @@
-/* =====================================================================
-   layout.js · Instrumentos Sintek
-   1) Tema claro/oscuro (recuerda la elección; si no hay, sigue al sistema).
-   2) Arma la barra lateral, la barra superior y las pestañas del celular
-      alrededor del contenido de cada página. Así las páginas solo
-      necesitan su <main class="contenido"> y no repiten el menú.
-   Se carga en el <head>:  <script src="layout.js"></script>
-   ===================================================================== */
 (function () {
   var raiz = document.documentElement;
   var CLAVE = "sintek-tema";
-
+ 
   /* ---------- 1. Tema ---------- */
   function leerTema() { try { return localStorage.getItem(CLAVE); } catch (e) { return null; } }
   function guardarTema(t) { try { localStorage.setItem(CLAVE, t); } catch (e) {} }
@@ -18,11 +10,11 @@
       (matchMedia("(prefers-color-scheme: dark)").matches ? "oscuro" : "claro");
   }
   if (leerTema()) raiz.setAttribute("data-tema", leerTema());   // antes de pintar, sin parpadeo
-
+ 
   /* ---------- 2. Datos del menú ---------- */
   // Cuando una pantalla exista, solo cambia su "#" por el nombre del archivo.
   var USUARIO = { nombre: "Ana Torres", rol: "Administradora" };  // después vendrá del login
-
+ 
   var ICONOS = {
     inicio: '<path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
     venta: '<path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>',
@@ -49,39 +41,40 @@
     salir: '<path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5M15 8l4 4-4 4M19 12H9"/>'
   };
   function icono(n) { return '<svg class="i" viewBox="0 0 24 24" aria-hidden="true">' + ICONOS[n] + '</svg>'; }
-
+ 
   var MENU = [
-    ["Ventas", [["inicio", "Inicio", "inicio.html"], ["venta", "Registrar venta", "registrar-venta.html"],
-                ["hist", "Historial de ventas", "historial-ventas.html"], ["clientes", "Clientes", "clientes.html"]]],
-    ["Inventario", [["prod", "Productos", "productos.html"], ["ajuste", "Ajustar stock", "ajustar-stock.html"], ["gest", "Gestión de inventario", "gestion-inventario.html"],
-                    ["exist", "Existencias", "existencias.html"], ["cons", "Consulta de existencia", "consulta-existencia.html"],
-                    ["ctrl", "Control de inventario", "control-inventario.html"]]],
-    ["Compras", [["prov", "Proveedores", "lista-proveedores.html"], ["entr", "Entregas", "proveedores.html"]]],
-    ["Personal", [["emp", "Empleados", "lista-empleados.html"], ["asis", "Asistencia", "asistencia.html"]]],
-    ["Análisis", [["rep", "Generar reportes", "generar-reportes.html"]]],
-    ["Administración", [["usr", "Usuarios", "usuarios.html"]]]
+    ["Ventas", [["inicio", "Inicio", "inicio.html"], ["venta", "Registrar venta", "registrar-venta.html"]]],
+    ["Inventario", [["ctrl", "Control de inventario", "control-inventario.html"], ["gest", "Gestionar inventario", "gestion-inventario.html"],
+                    ["mas", "Registrar producto", "registrar-producto.html"], ["exist", "Existencias", "existencias.html"],
+                    ["cons", "Consulta de existencia", "consulta-existencia.html"]]],
+    ["Compras", [["prov", "Proveedores", "proveedores.html"]]],
+    ["Personal", [["emp", "Empleados", "gestion-empleados.html"]]],
+    ["Análisis", [["rep", "Reportes", "generar-reportes.html"]]]
   ];
   // Qué opción del menú se ilumina en cada archivo (los que no aparecen usan su propio nombre)
-  var ACTIVA = {
-    "menu": "inicio", "metodo-pago": "venta", "registrar-proveedor": "prov",
-    "proveedores": "entr", "registrar-entrega": "entr",
-    "comprobante-venta": "hist", "registrar-cliente": "clientes", "registrar-producto": "prod",
-    "nuevo-empleado": "emp", "gestion-empleados": "emp", "crear-cuenta": "usr",
-    "reporte-resultado": "rep", "gestion-inventario": "prod", "control-inventario": "ajuste"
-  };
+  var ACTIVA = { "metodo-pago": "venta", "nuevo-empleado": "emp" };
   var PESTANAS = [["inicio", "Inicio", "inicio.html"], ["venta", "Vender", "registrar-venta.html"],
-                  ["exist", "Existencias", "existencias.html"], ["prov", "Proveedores", "lista-proveedores.html"]];
-
-  var LOGO = '<svg viewBox="0 0 64 72" aria-hidden="true"><path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="#e3b560"/>' +
-             '<text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#0f1d44" font-family="Oswald, Arial, sans-serif">IS</text></svg>';
-
+                  ["exist", "Existencias", "existencias.html"], ["prov", "Proveedores", "proveedores.html"]];
+ 
+  // Escudo metálico: cada logo lleva su propio degradado (un id distinto) para que se vea
+  // aunque otro logo de la página esté oculto.
+  var nLogo = 0;
+  function logo() {
+    var id = "metal" + (++nLogo);
+    return '<svg viewBox="0 0 64 72" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1">' +
+           '<stop offset="0" stop-color="#f4f7fc"/><stop offset=".3" stop-color="#b8c2d6"/><stop offset=".52" stop-color="#e8edf6"/>' +
+           '<stop offset=".78" stop-color="#a3aec4"/><stop offset="1" stop-color="#dfe5f0"/></linearGradient></defs>' +
+           '<path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="url(#' + id + ')"/>' +
+           '<text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#0f1d44" font-family="Oswald, Arial, sans-serif">IS</text></svg>';
+  }
+ 
   function crear(etiqueta, clase, html) {
     var e = document.createElement(etiqueta);
     if (clase) e.className = clase;
     if (html) e.innerHTML = html;
     return e;
   }
-
+ 
   /* Botón de tema (en todas las pantallas) */
   function botonTema() {
     var b = crear("button", "cambiar-tema");
@@ -100,33 +93,43 @@
     pintar();
     return b;
   }
-
+ 
   /* ---------- 3. Pantalla de inicio de sesión ---------- */
   function armarLogin() {
+    // Cinco líneas de pentagrama que ondulan y fluyen a distinta velocidad.
+    // Cada onda se repite cada 800 unidades, por eso el bucle no se nota.
     var pauta = "";
-    [40, 62, 84, 106, 128].forEach(function (y) {
-      pauta += '<path d="M0 ' + y + ' C300 ' + (y - 26) + ' 520 ' + (y + 30) + ' 900 ' + (y - 6) + ' S1300 ' + (y + 22) + ' 1600 ' + y + '"/>';
+    [40, 62, 84, 106, 128].forEach(function (y, i) {
+      var d = "M0 " + y + " Q200 " + (y - 22) + " 400 " + y;
+      for (var k = 0; k < 5; k++) d += " T" + (800 + k * 400) + " " + y;
+      pauta += '<g style="--t:' + (26 + i * 5) + 's"><path d="' + d + '"/></g>';
     });
+    var notas = "";
+    [["♪", 8, 26, 17, 0], ["♫", 22, 34, 22, -6], ["♩", 38, 24, 19, -11], ["♬", 55, 30, 24, -3], ["♪", 70, 22, 16, -9], ["♫", 86, 32, 21, -14]]
+      .forEach(function (n) {
+        notas += '<span style="--x:' + n[1] + '%;--s:' + n[2] + 'px;--d:' + n[3] + 's;--r:' + n[4] + 's">' + n[0] + '</span>';
+      });
     var marca = crear("aside", "login-marca",
-      '<div class="marca">' + LOGO + '<div><b>Instrumentos Sintek</b><small>Ventas e inventario</small></div></div>' +
-      '<svg class="pauta" viewBox="0 0 1600 170" fill="none" stroke="#e3b560" stroke-opacity=".5" stroke-width="1.3" preserveAspectRatio="none" aria-hidden="true">' + pauta + '</svg>' +
+      '<div class="notas" aria-hidden="true">' + notas + '</div>' +
+      '<div class="marca">' + logo() + '<div><b>Instrumentos Sintek</b><small>Ventas e inventario</small></div></div>' +
+      '<svg class="pauta" viewBox="0 0 1600 170" fill="none" stroke="#cfd7e6" stroke-opacity=".45" stroke-width="1.3" preserveAspectRatio="none" aria-hidden="true">' + pauta + '</svg>' +
       '<h2>Tu tienda de música, en orden.</h2>' +
       '<p>Registra ventas, controla las existencias y recibe a tus proveedores sin perder una cuerda.</p>');
     document.body.insertBefore(marca, document.body.firstChild);
     document.body.appendChild(botonTema());
   }
-
+ 
   /* ---------- 4. Resto de pantallas ---------- */
   function armarSistema() {
     var cuerpo = document.body;
     var contenido = document.querySelector("main.contenido");
     if (!contenido) return;
-
+ 
     var archivo = location.pathname.split("/").pop().replace(".html", "") || "index";
     var activa = ACTIVA[archivo] || archivo;
     // inicio.html es la pantalla de Inicio
     if (archivo === "inicio") activa = "inicio";
-
+ 
     // Barra lateral
     var grupos = "";
     MENU.forEach(function (g) {
@@ -137,16 +140,22 @@
       grupos += '<div class="grupo"><span>' + g[0] + '</span>' + items + '</div>';
     });
     var lateral = crear("aside", "lateral",
-      '<div class="marca">' + LOGO + '<div><b>Instrumentos Sintek</b><small>Ventas e inventario</small></div></div>' + grupos +
-      '<div class="pie"><a href="perfil.html"' + (archivo === "perfil" ? ' aria-current="page"' : '') + '>' + icono("cuenta") + 'Mi cuenta</a><a href="index.html">' + icono("salir") + 'Cerrar sesión</a></div>');
+      '<div class="marca">' + logo() + '<div><b>Instrumentos Sintek</b><small>Ventas e inventario</small></div></div>' + grupos +
+      '<div class="pie"><a href="index.html">' + icono("salir") + 'Cerrar sesión</a></div>');
     lateral.id = "menu-lateral";
     lateral.setAttribute("aria-label", "Menú del sistema");
-
+ 
     // Barra superior: título de la página, acción principal, tema y usuario
     var superior = crear("header", "superior");
-    superior.appendChild(crear("span", "marca-movil", LOGO));
+    superior.appendChild(crear("span", "marca-movil", logo()));
     var titulo = contenido.querySelector("h1.titulo");
-    if (titulo) superior.appendChild(titulo);          // el mismo h1, movido a la barra
+    var sub = contenido.querySelector(".subtitulo");
+    if (titulo) {                                       // el mismo h1 (y su subtítulo), movidos a la barra
+      var bloque = crear("div", "titulo-bloque");
+      bloque.appendChild(titulo);
+      if (sub) bloque.appendChild(sub);
+      superior.appendChild(bloque);
+    }
     var der = crear("div", "der");
     var accion = contenido.querySelector(".barra-accion .enlace-accion");
     if (accion) {
@@ -161,12 +170,11 @@
     der.appendChild(botonTema());
     var iniciales = USUARIO.nombre.split(" ").map(function (p) { return p[0]; }).join("").slice(0, 2);
     var yo = crear("a", "yo", '<i aria-hidden="true">' + iniciales + '</i><div><b>' + USUARIO.nombre + '</b><small>' + USUARIO.rol + '</small></div>');
-    yo.href = "perfil.html";
+    yo.href = "#";
     yo.setAttribute("aria-label", "Mi cuenta: " + USUARIO.nombre);
-    if (archivo === "perfil") yo.setAttribute("aria-current", "page");
     der.appendChild(yo);
     superior.appendChild(der);
-
+ 
     // Estructura final
     var principal = crear("div", "principal");
     var aviso = document.querySelector(".aviso");
@@ -176,7 +184,7 @@
     var app = crear("div", "app");
     app.appendChild(lateral);
     app.appendChild(principal);
-
+ 
     // Pestañas del celular (la quinta abre el menú completo)
     var tabs = '';
     PESTANAS.forEach(function (t) {
@@ -185,19 +193,19 @@
     tabs += '<button type="button" aria-expanded="false" aria-controls="menu-lateral">' + icono("menu") + 'Menú</button>';
     var pestanas = crear("nav", "pestanas", tabs);
     pestanas.setAttribute("aria-label", "Principal");
-
+ 
     var vieja = cuerpo.querySelector(".barra");
     if (vieja) vieja.remove();
     cuerpo.insertBefore(app, cuerpo.firstChild);
     cuerpo.appendChild(pestanas);
-
+ 
     var btnMenu = pestanas.querySelector("button");
     function menu(abrir) { cuerpo.classList.toggle("menu-abierto", abrir); btnMenu.setAttribute("aria-expanded", String(abrir)); }
     btnMenu.addEventListener("click", function () { menu(!cuerpo.classList.contains("menu-abierto")); });
     lateral.addEventListener("click", function (e) { if (e.target.closest("a")) menu(false); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") menu(false); });
   }
-
+ 
   /* Selector de apariencia de la pantalla Mi cuenta: botones con data-tema-opcion="claro|oscuro|auto" */
   function conectarApariencia() {
     var botones = document.querySelectorAll("[data-tema-opcion]");
@@ -218,9 +226,11 @@
     });
     marcar();
   }
-
+ 
   document.addEventListener("DOMContentLoaded", function () {
     if (document.body.classList.contains("pagina-login")) armarLogin();
+    else if (document.body.classList.contains("pagina-tarjeta")) armarLogin();   // crear cuenta: mismo fondo animado que el login
     else { armarSistema(); conectarApariencia(); }
   });
 })();
+ 
