@@ -459,3 +459,22 @@ body.pagina-login, body.pagina-tarjeta { height: 100dvh; overflow: hidden; }
 .pagina-tarjeta .login-marca p { display: none; }
 .pagina-tarjeta .encabezado-tarjeta { justify-content: center; }
 .pagina-tarjeta .acciones { justify-content: center; }
+
+.btn-piano {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #2b2d42; /* Color oscuro elegante, cámbialo al tema de Syntec */
+  color: #ffffff;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 2px solid #8d99ae;
+  transition: transform 0.2s, background-color 0.2s;
+  text-align: center; 
+}
+
+.btn-piano:hover {
+  background-color: #1d4ba; /* Color al pasar el mouse */
+  transform: scale(1.05);
+}
