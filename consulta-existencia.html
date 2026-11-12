@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consulta de existencia | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="contenido">
+    <h1 class="titulo">Consulta de existencia</h1>
+    <p class="subtitulo">Buscar un producto</p>
+    <form id="form-busqueda" role="search">
+      <div class="busqueda__barra"><label for="buscar" class="solo-lectores">Buscar por nombre o id</label><input type="search" id="buscar" placeholder="Buscar por nombre o id"><button type="submit" class="boton">Buscar</button></div>
+    </form>
+    <div class="filtros-chip">
+      <select aria-label="Tipo"><option>Tipo</option><option>Guitarra</option><option>Teclado</option><option>Viento</option></select>
+      <select aria-label="Marca"><option>Marca</option><option>Fender</option><option>Yamaha</option><option>Gibson</option></select>
+      <select aria-label="Accesorios"><option>Accesorios</option><option>Con estuche</option><option>Sin accesorios</option></select>
+      <select aria-label="Material"><option>Material</option><option>Madera</option><option>Metal</option></select>
+    </div>
+    <section class="resultado" id="resultado" aria-live="polite" style="max-width:580px">
+      <dl class="ficha">
+        <div class="dato"><dt>Nombre</dt><dd>STRATOCASTER</dd></div>
+        <div class="dato"><dt>Precio</dt><dd>$1,500.00</dd></div>
+        <div class="dato"><dt>Código</dt><dd>223227185</dd></div>
+        <div class="dato"><dt>Stock disponible</dt><dd><span class="estado estado--ok">Disponible</span></dd></div>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>

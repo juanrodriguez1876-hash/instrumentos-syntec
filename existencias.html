@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Existencias | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="contenido">
+    <h1 class="titulo">Existencias</h1>
+    <p class="subtitulo">Stock actual por producto</p>
+    <div class="tabla-contenedor"><table class="tabla tabla--tarjetas" aria-label="Existencias">
+      <thead><tr><th scope="col">Producto</th><th scope="col">Stock</th><th scope="col">Mínimo</th><th scope="col">Estado</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Producto">Guitarra eléctrica</td><td data-label="Stock">15</td><td data-label="Mínimo">5</td><td data-label="Estado"><span class="estado estado--ok">Disponible</span></td></tr>
+        <tr><td data-label="Producto">Guitarra acústica</td><td data-label="Stock">20</td><td data-label="Mínimo">8</td><td data-label="Estado"><span class="estado estado--ok">Disponible</span></td></tr>
+        <tr><td data-label="Producto">Saxofón alto</td><td data-label="Stock">0</td><td data-label="Mínimo">1</td><td data-label="Estado"><span class="estado estado--no">No disponible</span></td></tr>
+      </tbody></table></div>
+  </main>
+</body>
+</html>

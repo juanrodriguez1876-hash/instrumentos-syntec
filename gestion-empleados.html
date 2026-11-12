@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestión de empleados | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="contenido">
+    <div class="barra-accion"><a href="nuevo-empleado.html" class="enlace-accion">Nuevo empleado <span class="icono-mas" aria-hidden="true">+</span></a></div>
+    <h1 class="titulo">Gestión de empleados</h1>
+    <p class="subtitulo">Horarios y comisiones</p>
+    <div class="tabla-contenedor"><table class="tabla tabla--tarjetas" aria-label="Empleados">
+      <thead><tr><th scope="col">Nombre</th><th scope="col">Hora de entrada</th><th scope="col">Hora de salida</th><th scope="col">Comisiones</th></tr></thead>
+      <tbody>
+        <tr><td data-label="Nombre">Juan 1</td><td data-label="Hora de entrada">12:14</td><td data-label="Hora de salida">17:45</td><td data-label="Comisiones">$450</td></tr>
+        <tr><td data-label="Nombre">Juan 2</td><td data-label="Hora de entrada">13:09</td><td data-label="Hora de salida">16:23</td><td data-label="Comisiones">$210</td></tr>
+        <tr><td data-label="Nombre">Juan 3</td><td data-label="Hora de entrada">10:21</td><td data-label="Hora de salida">5:30</td><td data-label="Comisiones">$430</td></tr>
+        <tr><td data-label="Nombre">Juan 4</td><td data-label="Hora de entrada">9:27</td><td data-label="Hora de salida">14:34</td><td data-label="Comisiones">$400</td></tr>
+        <tr><td data-label="Nombre">Juan 5</td><td data-label="Hora de entrada">6:56</td><td data-label="Hora de salida">11:38</td><td data-label="Comisiones">$560</td></tr>
+        <tr><td data-label="Nombre">Juan 6</td><td data-label="Hora de entrada">19:40</td><td data-label="Hora de salida">22:05</td><td data-label="Comisiones">$600</td></tr>
+      </tbody></table></div>
+  </main>
+</body>
+</html>
