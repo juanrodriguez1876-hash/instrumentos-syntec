@@ -1,3 +1,11 @@
+/* =====================================================================
+   layout.js · Instrumentos Sintek
+   1) Tema claro/oscuro (recuerda la elección; si no hay, sigue al sistema).
+   2) Arma la barra lateral, la barra superior y las pestañas del celular
+      alrededor del contenido de cada página. Así las páginas solo
+      necesitan su <main class="contenido"> y no repiten el menú.
+   Se carga en el <head>:  <script src="layout.js"></script>
+   ===================================================================== */
 (function () {
   var raiz = document.documentElement;
   var CLAVE = "sintek-tema";

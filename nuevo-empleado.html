@@ -4,31 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Nuevo empleado | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="estilos.css">
   <script src="layout.js"></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <header class="barra">
-    <a href="menu.html" class="boton-barra" aria-label="Ir al menú principal">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
-    </a>
-    <svg class="logo" viewBox="0 0 64 72" role="img" aria-label="Logo Instrumentos Sintek">
-      <path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="#0b1f4b"/>
-      <text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#fff" font-family="Oswald, Arial, sans-serif">IS</text>
-    </svg>
-  </header>
   <main class="contenido">
-    <div class="barra-accion"><a href="crear-cuenta.html" class="enlace-accion">Agregar nuevo usuario <span class="icono-mas" aria-hidden="true">+</span></a></div>
     <h1 class="titulo">Nuevo empleado</h1>
-    <div class="ficha-empleado">
-      <form action="#" method="post">
-        <div class="campo"><label for="nombre">Nombre completo</label><input type="text" id="nombre" name="nombre" placeholder="Nombre y apellidos" required></div>
-        <div class="campo"><label for="telefono">Teléfono</label><input type="tel" id="telefono" name="telefono" placeholder="10 dígitos" required></div>
-        <div class="campo"><label for="edad">Edad</label><input type="number" id="edad" name="edad" min="18" max="99" required></div>
-        <div class="campo"><label for="direccion">Dirección</label><input type="text" id="direccion" name="direccion" placeholder="Calle, número y colonia" required></div>
-        <div class="acciones acciones--centro"><button type="submit" class="boton">Guardar</button></div>
+    <p class="subtitulo">Empleados · Nuevo</p>
+    <div class="ficha-empleado" style="max-width:650px">
+      <form data-aviso="Empleado guardado" data-destino="gestion-empleados.html">
+        <div class="campo"><label for="nombre">Nombre completo</label><input id="nombre" placeholder="Nombre y apellidos" required></div>
+        <div class="doble"><div class="campo"><label for="tel">Teléfono</label><input id="tel" type="tel" placeholder="10 dígitos" required></div><div class="campo"><label for="edad">Edad</label><input id="edad" type="number" min="18" max="99" placeholder="18" required></div></div>
+        <div class="campo"><label for="dir">Dirección</label><input id="dir" placeholder="Calle, número y colonia" required></div>
+        <div class="acciones" style="justify-content:flex-start"><a href="gestion-empleados.html" class="boton boton--contorno">Cancelar</a><button type="submit" class="boton">Guardar</button></div>
       </form>
-      <svg class="avatar" viewBox="0 0 64 64" fill="currentColor" aria-hidden="true"><circle cx="32" cy="20" r="12"/><path d="M8 58c0-13 10-22 24-22s24 9 24 22z"/></svg>
+      <svg class="avatar" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" aria-hidden="true"><circle cx="32" cy="20" r="11"/><path d="M12 54c0-10 8-16 20-16s20 6 20 16"/></svg>
     </div>
   </main>
 </body>

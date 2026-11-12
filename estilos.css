@@ -1,3 +1,9 @@
+/* =====================================================================
+   INSTRUMENTOS SINTEK · estilos.css (versión 4: diseño de sistema)
+   Barra lateral + barra superior (las crea layout.js), modo claro/oscuro
+   y diseño adaptable a celular.
+   ===================================================================== */
+
 /* ---------- 1. Variables ---------- */
 :root {
   color-scheme: light dark;

@@ -3,70 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inicio | Instrumentos Sintek</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <title>Iniciar sesión | Instrumentos Sintek</title>
   <link rel="stylesheet" href="estilos.css">
   <script src="layout.js"></script>
-  
-
+</head>
+<body class="pagina-login">
+  <header class="barra">
+    
+    <svg class="logo" viewBox="0 0 64 72" role="img" aria-label="Logo Instrumentos Sintek">
+      <path d="M32 2C14 2 4 14 4 30c0 16 16 30 28 40 12-10 28-24 28-40C60 14 50 2 32 2Z" fill="#0b1f4b"/>
+      <text x="32" y="40" text-anchor="middle" font-size="22" font-weight="600" fill="#fff" font-family="Oswald, Arial, sans-serif">IS</text>
+    </svg>
+  </header>
   <main class="contenido">
-    <!-- layout.js mueve el título y la acción a la barra de arriba -->
-    <div class="barra-accion"><a href="registrar-venta.html" class="enlace-accion">Nueva venta <span class="icono-mas" aria-hidden="true">+</span></a></div>
-    <h1 class="titulo">Inicio</h1>
-
-    <!-- Datos de ejemplo e inventados; después vendrán de la base de datos. -->
-    <section class="resumen-dia" aria-label="Resumen del día">
-      <div class="dato-dia"><span>Ventas de hoy</span><b>$6,180.00</b><small>11 ventas registradas</small></div>
-      <div class="dato-dia"><span>Ticket promedio</span><b>$561.82</b><small>Productos por venta: 2.4</small></div>
-      <div class="dato-dia dato-dia--alerta"><span>Por agotarse</span><b>3 productos</b><small>1 sin existencias</small></div>
-      <div class="dato-dia"><span>Entregas de hoy</span><b>3</b><small>La próxima llega a las 12:00</small></div>
-    </section>
-
-    <div class="dos-columnas">
-      <section class="tarjeta">
-        <header><h2>Ventas de los últimos 7 días</h2><a href="generar-reportes.html">Ver reportes</a></header>
-        <div class="cuerpo">
-          <svg class="grafica" viewBox="0 0 640 240" role="img" aria-label="Ventas de los últimos 7 días: la mejor fue el viernes con $9,410">
-      <line class="linea" x1="54" x2="640" y1="206" y2="206"/><text x="44" y="210" text-anchor="end">$0k</text>
-      <line class="linea" x1="54" x2="640" y1="112" y2="112"/><text x="44" y="116" text-anchor="end">$5k</text>
-      <line class="linea" x1="54" x2="640" y1="18" y2="18"/><text x="44" y="22" text-anchor="end">$10k</text>
-      <path class="barra-dato" d="M82 206V150a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="96" y="228" text-anchor="middle">Dom</text>
-      <path class="barra-dato" d="M166 206V100a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="180" y="228" text-anchor="middle">Lun</text>
-      <path class="barra-dato" d="M249 206V121a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="263" y="228" text-anchor="middle">Mar</text>
-      <path class="barra-dato" d="M333 206V92a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="347" y="228" text-anchor="middle">Mié</text>
-      <path class="barra-dato" d="M417 206V77a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="431" y="228" text-anchor="middle">Jue</text>
-      <path class="barra-dato" d="M500 206V33a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="514" y="228" text-anchor="middle">Vie</text>
-      <text class="valor" x="514" y="22" text-anchor="middle">$9,410</text>
-      <path class="barra-dato" d="M584 206V94a4 4 0 0 1 4-4h20a4 4 0 0 1 4 4V206z"/><text x="598" y="228" text-anchor="middle">Sáb</text>
-      <text class="valor" x="598" y="83" text-anchor="middle">$6,180</text>
-          </svg>
+    <section class="tarjeta-login">
+      <span class="nota-tarjeta" aria-hidden="true">&#9835;</span>
+      <h1 class="titulo titulo--centro">Bienveni@</h1>
+      <form action="inicio.html" method="get">
+        <div class="campo"><label for="usuario">Usuario</label><input type="text" id="usuario" name="usuario" required></div>
+        <div class="campo"><label for="contrasena">Contraseña</label><input type="password" id="contrasena" name="contrasena" required></div>
+        <p class="enlace-centrado"><a href="recuperar-contrasena.html">¿Olvidaste tu contraseña?</a></p>
+        <div class="acciones">
+          <button type="submit" class="boton">Login</button>
+          <a href="crear-cuenta.html" class="boton boton--contorno">Registrar cuenta</a>
         </div>
-      </section>
-      <section class="tarjeta">
-        <header><h2>Entregas de hoy</h2><a href="proveedores.html">Ver todas</a></header>
-        <div class="cuerpo">
-          <div class="entrega"><time>12:00</time><div><b>Guitarras</b><small>Gibson</small></div></div>
-          <div class="entrega"><time>14:00</time><div><b>Púas</b><small>Fender</small></div></div>
-          <div class="entrega"><time>16:00</time><div><b>Ukeleles</b><small>Yamaha</small></div></div>
-        </div>
-      </section>
-    </div>
-
-    <section class="tarjeta">
-      <header><h2>Productos por reponer</h2><a href="existencias.html">Ver existencias</a></header>
-      <div class="cuerpo por-reponer">
-        <div><b>Teclado Yamaha PSR-E373</b><span class="estado estado--no">Sin existencias</span><div class="medidor medidor--no" role="img" aria-label="Stock 0, mínimo 2"><i style="width:0%"></i></div></div>
-        <div><b>Capo universal</b><span class="estado estado--poco">Quedan 2</span><div class="medidor medidor--poco" role="img" aria-label="Stock 2, mínimo 5"><i style="width:13%"></i></div></div>
-        <div><b>Ukelele soprano Yamaha</b><span class="estado estado--poco">Quedan 3</span><div class="medidor medidor--poco" role="img" aria-label="Stock 3, mínimo 4"><i style="width:25%"></i></div></div>
-        <div><b>Cuerdas D’Addario EXP16</b><span class="estado estado--poco">Quedan 6</span><div class="medidor medidor--poco" role="img" aria-label="Stock 6, mínimo 10"><i style="width:20%"></i></div></div>
-      </div>
+      </form>
     </section>
   </main>
-
 </body>
 </html>
-
-
