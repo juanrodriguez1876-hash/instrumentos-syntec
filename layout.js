@@ -1,3 +1,11 @@
+/* =====================================================================
+   layout.js · Instrumentos Sintek
+   1) Tema claro/oscuro (recuerda la elección; si no hay, sigue al sistema).
+   2) Arma la barra lateral, la barra superior y las pestañas del celular
+      alrededor del contenido de cada página. Así las páginas solo
+      necesitan su <main class="contenido"> y no repiten el menú.
+   Se carga en el <head>:  <script src="layout.js"></script>
+   ===================================================================== */
 (function () {
   var raiz = document.documentElement;
   var CLAVE = "sintek-tema";
@@ -44,12 +52,8 @@
  
   var MENU = [
     ["Ventas", [["inicio", "Inicio", "inicio.html"], ["venta", "Registrar venta", "registrar-venta.html"]]],
-    ["Inventario", [["ctrl", "Control de inventario", "control-inventario.html"], ["gest", "Gestionar inventario", "gestion-inventario.html"],
-                    ["mas", "Registrar producto", "registrar-producto.html"], ["exist", "Existencias", "existencias.html"],
+    ["Inventario",[["mas", "Registrar producto", "registrar-producto.html"], ["exist", "Existencias", "existencias.html"],
                     ["cons", "Consulta de existencia", "consulta-existencia.html"]]],
-    ["Compras", [["prov", "Proveedores", "proveedores.html"]]],
-    ["Personal", [["emp", "Empleados", "gestion-empleados.html"]]],
-    ["Análisis", [["rep", "Reportes", "generar-reportes.html"]]]
   ];
   // Qué opción del menú se ilumina en cada archivo (los que no aparecen usan su propio nombre)
   var ACTIVA = { "metodo-pago": "venta", "nuevo-empleado": "emp" };
