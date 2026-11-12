@@ -1,2 +1,0 @@
-Instrumentos Sintek - 14 pantallas (HTML + CSS + JS, sin dependencias)
-Abrir index.html para iniciar. En StackBlitz: plantilla "HTML/CSS/JS", reemplaza los archivos.
