@@ -17,11 +17,13 @@
     <p class="subtitulo">Inventario · Nuevo</p>
     <form id="form-registrar-producto" class="tarjeta-form" data-aviso="Producto guardado" data-destino="gestion-inventario.html">
       <div class="linea">
-        <label for="codigo">Código</label><input id="codigo" placeholder="Ej. 23564" required>
-        <label for="nombre">Nombre del producto</label><input id="nombre" placeholder="Ej. Guitarra acústica" required>
-        <label for="precio">Precio</label><input id="precio" type="number" min="0" step="0.01" placeholder="$0.00" required>
-        <label for="cant">Cantidad inicial</label><input id="cant" type="number" min="0" placeholder="0" required>
-        <div class="acciones"><a href="gestion-inventario.html" class="boton boton--contorno">Cancelar</a><button type="submit" class="boton">Guardar</button></div>
+        <label for="codigo">Número de serie</label><input id="codigo" placeholder="Ej. 23564" required>
+<label for="nombre">Nombre del producto</label><input id="nombre" placeholder="Ej. Guitarra acústica" required>
+<label for="tipo_producto">Tipo de producto</label><input id="tipo_producto" placeholder="Ej. Cuerdas">
+<label for="marca">Marca</label><input id="marca" placeholder="Ej. Fender">
+<label for="modelo">Modelo</label><input id="modelo" placeholder="Ej. Stratocaster">
+<label for="precio">Precio</label><input id="precio" type="number" min="0" step="0.01" placeholder="$0.00" required>
+<label for="cant">Cantidad inicial</label><input id="cant" type="number" min="0" placeholder="0" required>        <div class="acciones"><a href="gestion-inventario.html" class="boton boton--contorno">Cancelar</a><button type="submit" class="boton">Guardar</button></div>
       </div>
     </form>
   </main>
