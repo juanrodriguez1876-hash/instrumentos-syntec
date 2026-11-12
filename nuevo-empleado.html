@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nuevo empleado | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="contenido">
+    <h1 class="titulo">Nuevo empleado</h1>
+    <p class="subtitulo">Empleados · Nuevo</p>
+    <div class="ficha-empleado" style="max-width:650px">
+      <form data-aviso="Empleado guardado" data-destino="gestion-empleados.html">
+        <div class="campo"><label for="nombre">Nombre completo</label><input id="nombre" placeholder="Nombre y apellidos" required></div>
+        <div class="doble"><div class="campo"><label for="tel">Teléfono</label><input id="tel" type="tel" placeholder="10 dígitos" required></div><div class="campo"><label for="edad">Edad</label><input id="edad" type="number" min="18" max="99" placeholder="18" required></div></div>
+        <div class="campo"><label for="dir">Dirección</label><input id="dir" placeholder="Calle, número y colonia" required></div>
+        <div class="acciones" style="justify-content:flex-start"><a href="gestion-empleados.html" class="boton boton--contorno">Cancelar</a><button type="submit" class="boton">Guardar</button></div>
+      </form>
+      <svg class="avatar" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" aria-hidden="true"><circle cx="32" cy="20" r="11"/><path d="M12 54c0-10 8-16 20-16s20 6 20 16"/></svg>
+    </div>
+  </main>
+</body>
+</html>
