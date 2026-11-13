@@ -12,24 +12,69 @@
   <script src="app.js" defer></script>
 </head>
 <body>
-  <main class="contenido">
+  <main class="contenido" id="vista-registrar-venta">
     <h1 class="titulo">Registrar venta</h1>
     <p class="subtitulo">Nueva venta</p>
+
     <div class="doble">
-      <div class="campo"><label for="folio">Folio de venta</label><input id="folio" value="#1048"></div>
-      <div class="campo"><label for="fecha">Fecha</label><input id="fecha" value="31/10/2026"></div>
+      <div class="campo">
+        <label for="folio">Folio de venta (Núm.)</label>
+        <input id="folio" type="number" placeholder="Cargando...">
+      </div>
+      <div class="campo">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date">
+      </div>
+      <div class="campo">
+        <label for="select-cliente">Cliente</label>
+        <select id="select-cliente">
+          <option value="">Cargando clientes...</option>
+        </select>
+      </div>
     </div>
+
+    <!-- Barra para agregar productos reales de Supabase -->
+    <div class="doble" style="margin-top: 1rem; align-items: end;">
+      <div class="campo">
+        <label for="select-producto-venta">Seleccionar producto</label>
+        <select id="select-producto-venta">
+          <option value="">Cargando productos...</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="cant-producto-venta">Cantidad</label>
+        <input id="cant-producto-venta" type="number" min="1" value="1">
+      </div>
+      <div class="campo">
+        <button type="button" id="btn-agregar-producto" class="boton boton--contorno">Agregar a la venta</button>
+      </div>
+    </div>
+
     <div class="venta">
-      <div class="tabla-contenedor"><table class="tabla" aria-label="Productos de la venta">
-        <thead><tr><th scope="col">Producto</th><th scope="col">Precio</th><th scope="col">Cantidad</th><th scope="col">Importe</th></tr></thead>
-        <tbody>
-          <tr><td>Guitarra acústica Fender CD-60</td><td>$4,890.00</td><td>1</td><td>$4,890.00</td></tr>
-          <tr><td>Cuerdas D’Addario EXP16</td><td>$285.00</td><td>2</td><td>$570.00</td></tr>
-          <tr><td>Púas Fender (paquete de 12)</td><td>$95.00</td><td>3</td><td>$285.00</td></tr>
-        </tbody></table></div>
+      <div class="tabla-contenedor">
+        <table class="tabla" id="tabla-carrito-venta" aria-label="Productos de la venta">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Importe</th>
+              <th scope="col">Quitar</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-carrito-venta">
+            <tr><td colspan="5" style="text-align:center;">Agrega productos para iniciar la venta</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <aside class="tarjeta-total">
-        <dl class="totales"><div><dt>Subtotal</dt><dd>$5,745.00</dd></div><div><dt>IVA (16%)</dt><dd>$919.20</dd></div><div class="total"><dt>Total</dt><dd>$6,664.20</dd></div></dl>
-        <a href="metodo-pago.html" class="boton">Continuar al pago</a>
+        <dl class="totales">
+          <div><dt>Subtotal</dt><dd id="venta-subtotal">$0.00</dd></div>
+          <div><dt>IVA (16%)</dt><dd id="venta-iva">$0.00</dd></div>
+          <div class="total"><dt>Total</dt><dd id="venta-total">$0.00</dd></div>
+        </dl>
+        <button type="button" id="btn-guardar-venta" class="boton">Continuar al pago</button>
       </aside>
     </div>
   </main>

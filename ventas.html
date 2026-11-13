@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Listado de ventas | Instrumentos Sintek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <script src="layout.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="contenido">
+    <h1 class="titulo">Listado de ventas</h1>
+    <p class="subtitulo">Historial · Ventas registradas</p>
+
+    <div class="acciones" style="margin-bottom: 1.5rem;">
+      <a href="registrar-venta.html" class="boton">+ Registrar nueva venta</a>
+    </div>
+
+    <div class="tabla-contenedor">
+      <table class="tabla" aria-label="Listado de ventas">
+        <thead>
+          <tr>
+            <th scope="col">Folio</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Productos</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5" style="text-align:center;">Cargando ventas desde Supabase...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

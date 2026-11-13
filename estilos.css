@@ -29,6 +29,26 @@
 :root[data-tema="claro"]  { color-scheme: light; }
 :root[data-tema="oscuro"] { color-scheme: dark; }
 
+.btn-piano {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #2b2d42; /* Color oscuro elegante, cámbialo al tema de Syntec */
+  color: #ffffff;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 2px solid #8d99ae;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-piano:hover {
+  background-color: rgb(35, 147, 239); /* Color al pasar el mouse */
+  transform: scale(1.05);
+}
+
+
+
 /* ---------- 2. Base ---------- */
 *, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; background: var(--fondo); color: var(--texto); font: 400 15px/1.5 var(--fuente-texto); -webkit-font-smoothing: antialiased; }

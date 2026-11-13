@@ -53,7 +53,7 @@
   var MENU = [
     ["Ventas", [["inicio", "Inicio", "inicio.html"], ["venta", "Registrar venta", "registrar-venta.html"]]],
     ["Inventario",[["mas", "Registrar producto", "registrar-producto.html"], ["exist", "Existencias", "existencias.html"],
-                    ["cons", "Consulta de existencia", "consulta-existencia.html"]]],
+                    ]],
   ];
   // Qué opción del menú se ilumina en cada archivo (los que no aparecen usan su propio nombre)
   var ACTIVA = { "metodo-pago": "venta", "nuevo-empleado": "emp" };
