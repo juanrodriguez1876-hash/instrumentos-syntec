@@ -473,3 +473,121 @@ body.pagina-login, body.pagina-tarjeta { height: 100dvh; overflow: hidden; }
 .pagina-tarjeta .login-marca p { display: none; }
 .pagina-tarjeta .encabezado-tarjeta { justify-content: center; }
 .pagina-tarjeta .acciones { justify-content: center; }
+ 
+/* ============================================================
+   Editor de ventas
+   ============================================================ */
+
+.editor-venta {
+  margin-top: 32px;
+  padding: 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+}
+
+.editor-venta[hidden] {
+  display: none !important;
+}
+
+.editor-venta__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.editor-venta__encabezado h2 {
+  font-size: 23px;
+}
+
+.editor-venta__campos,
+.editor-venta__agregar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 24px;
+  align-items: end;
+}
+
+.editor-venta label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.editor-venta input,
+.editor-venta select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  background: var(--superficie-2);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: 7px;
+}
+
+.editor-venta h3 {
+  margin-top: 24px;
+  font-size: 19px;
+}
+
+.editor-venta__agregar {
+  grid-template-columns: minmax(0, 1fr) 120px auto;
+}
+
+.editor-venta__agregar .boton {
+  min-height: 42px;
+}
+
+.editor-venta__totales {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 7px;
+  margin: 20px 0;
+  padding: 18px;
+  background: var(--superficie-2);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+}
+
+.editor-venta__totales p {
+  margin: 0;
+}
+
+.editor-venta__total {
+  font-size: 19px;
+  padding-top: 8px;
+  border-top: 1px solid var(--borde);
+}
+
+.editor-venta .acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 700px) {
+  .editor-venta {
+    padding: 16px;
+  }
+
+  .editor-venta__campos,
+  .editor-venta__agregar {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-venta__encabezado {
+    align-items: flex-start;
+  }
+
+  .editor-venta .tabla-contenedor {
+    overflow-x: auto;
+  }
+}
