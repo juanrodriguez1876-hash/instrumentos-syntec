@@ -4,6 +4,7 @@
 const SUPABASE_URL = "https://phgozpmwgtbdiwzbbvcm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_xGK8x1qxR8s_LjP3tcy6zA_62wPGS4o";
 let db = null;
+let filtroExistenciaActual = "todos";
 
 function inicializarSupabase() {
   return new Promise((resolve, reject) => {
@@ -88,6 +89,21 @@ async function obtenerSiguienteId(tabla) {
   }
 
   return Number(data[0].identificacion) + 1;
+}
+
+
+// CLASIFICACIÓN Y FILTRADO POR EXISTENCIAS REALES
+function clasificarExistencia(continuo) {
+  const stock = Number(continuo ?? 0);
+  if (stock <= 0) return "agotados";
+  if (stock <= 3) return "bajo";
+  return "disponibles";
+}
+
+function filtrarProductosPorExistencia(productos, filtro = "todos") {
+  const lista = Array.isArray(productos) ? productos : [];
+  if (filtro === "todos") return lista;
+  return lista.filter(p => clasificarExistencia(p.continuo) === filtro);
 }
 
 
@@ -278,7 +294,51 @@ async function cargarHistorialVentas(tabla) {
 }
 
 
-// 6. CARGAR TABLAS DE INVENTARIO Y CONSULTA
+// 6. CARGAR TABLAS DE INVENTARIO Y CONSULTA CON FILTROS DE EXISTENCIA
+
+function renderizarBarraFiltrosExistencia(tabla, productosTotales) {
+  const contenedorTabla = tabla.closest(".tabla-contenedor") || tabla.parentElement;
+  if (!contenedorTabla || !contenedorTabla.parentElement) return;
+
+  const conteos = {
+    todos: productosTotales.length,
+    disponibles: productosTotales.filter(p => clasificarExistencia(p.continuo) === "disponibles").length,
+    bajo: productosTotales.filter(p => clasificarExistencia(p.continuo) === "bajo").length,
+    agotados: productosTotales.filter(p => clasificarExistencia(p.continuo) === "agotados").length
+  };
+
+  let barra = contenedorTabla.parentElement.querySelector(".barra-filtros-existencia");
+
+  if (!barra) {
+    barra = document.createElement("div");
+    barra.className = "herramientas barra-filtros-existencia";
+    contenedorTabla.parentElement.insertBefore(barra, contenedorTabla);
+  }
+
+  barra.innerHTML = `
+    <div class="seg" role="group" aria-label="Filtrar productos por existencia">
+      <button type="button" data-filtro-existencia="todos" aria-pressed="${filtroExistenciaActual === "todos"}">
+        Todos (${conteos.todos})
+      </button>
+      <button type="button" data-filtro-existencia="disponibles" aria-pressed="${filtroExistenciaActual === "disponibles"}">
+        Disponibles (${conteos.disponibles})
+      </button>
+      <button type="button" data-filtro-existencia="bajo" aria-pressed="${filtroExistenciaActual === "bajo"}">
+        Stock bajo (${conteos.bajo})
+      </button>
+      <button type="button" data-filtro-existencia="agotados" aria-pressed="${filtroExistenciaActual === "agotados"}">
+        Agotados (${conteos.agotados})
+      </button>
+    </div>
+  `;
+
+  barra.querySelectorAll("button[data-filtro-existencia]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      filtroExistenciaActual = btn.getAttribute("data-filtro-existencia") || "todos";
+      await cargarTablaProductos(tabla);
+    });
+  });
+}
 
 async function cargarTablaProductos(tabla) {
 
@@ -300,26 +360,42 @@ async function cargarTablaProductos(tabla) {
     return;
   }
 
-  if (!productos || productos.length === 0) {
+  const todosLosProductos = productos || [];
+
+  renderizarBarraFiltrosExistencia(tabla, todosLosProductos);
+
+  const productosFiltrados = filtrarProductosPorExistencia(
+    todosLosProductos,
+    filtroExistenciaActual
+  );
+
+  if (productosFiltrados.length === 0) {
+    const etiquetasFiltro = {
+      todos: "No hay productos registrados.",
+      disponibles: "No hay productos disponibles en este momento.",
+      bajo: "No hay productos con stock bajo.",
+      agotados: "No hay productos agotados."
+    };
+
     tbody.innerHTML = `
       <tr>
         <td colspan="${encabezados.length || 5}" style="text-align:center;">
-          No hay productos registrados.
+          ${etiquetasFiltro[filtroExistenciaActual] || "Sin resultados."}
         </td>
       </tr>
     `;
     return;
   }
 
-  tbody.innerHTML = productos.map(p => {
+  tbody.innerHTML = productosFiltrados.map(p => {
 
     const stock = Number(p.continuo ?? 0);
     const precio = aNumero(p.precio);
 
-    const estado = stock === 0
-      ? ["no", "No disponible"]
+    const estado = stock <= 0
+      ? ["no", "Agotado"]
       : stock <= 3
-        ? ["poco", "Por agotarse"]
+        ? ["poco", "Stock bajo"]
         : ["ok", "Disponible"];
 
     const badgeEstado = `
@@ -1007,7 +1083,7 @@ function inicializarFormulariosDemo() {
 }
 
 
-// 13. CONSULTAR EXISTENCIAS
+// 13. CONSULTAR EXISTENCIAS Y FILTROS DE DISPONIBILIDAD
 
 function inicializarBusqueda() {
 
@@ -1016,6 +1092,28 @@ function inicializarBusqueda() {
   if (!formulario) return;
 
   const caja = document.getElementById("resultado");
+  let filtroConsulta = "todos";
+
+  // Inyectar selector de estado de existencia en el formulario de consulta si no existe
+  let selectExistencia = formulario.querySelector("#filtro-existencia-consulta");
+  if (!selectExistencia) {
+    const contenedorFiltros = formulario.querySelector(".filtros") || formulario.querySelector(".filtros-chip") || formulario;
+    selectExistencia = document.createElement("select");
+    selectExistencia.id = "filtro-existencia-consulta";
+    selectExistencia.setAttribute("aria-label", "Filtrar por existencia");
+    selectExistencia.innerHTML = `
+      <option value="todos">Todas las existencias</option>
+      <option value="disponibles">Disponibles (&gt; 3)</option>
+      <option value="bajo">Stock bajo (1 - 3)</option>
+      <option value="agotados">Agotados (0)</option>
+    `;
+    contenedorFiltros.appendChild(selectExistencia);
+
+    selectExistencia.addEventListener("change", () => {
+      filtroConsulta = selectExistencia.value;
+      formulario.dispatchEvent(new Event("submit", { cancelable: true }));
+    });
+  }
 
   formulario.addEventListener("submit", async function (e) {
 
@@ -1030,15 +1128,17 @@ function inicializarBusqueda() {
       return;
     }
 
-    const busqueda = document.getElementById("buscar").value.trim();
+    const inputBuscar = document.getElementById("buscar");
+    const busqueda = inputBuscar ? inputBuscar.value.trim() : "";
 
-    caja.innerHTML = "<p>Buscando en inventario...</p>";
+    caja.innerHTML = "<p>Consultando existencias reales...</p>";
 
     try {
 
       let consulta = db
         .from("productos")
-        .select("*");
+        .select("*")
+        .order("nombre", { ascending: true });
 
       if (busqueda) {
 
@@ -1049,68 +1149,81 @@ function inicializarBusqueda() {
         );
       }
 
-      const { data: productos, error } = await consulta.limit(1);
+      if (filtroConsulta === "disponibles") {
+        consulta = consulta.gt("continuo", 3);
+      } else if (filtroConsulta === "bajo") {
+        consulta = consulta.gte("continuo", 1).lte("continuo", 3);
+      } else if (filtroConsulta === "agotados") {
+        consulta = consulta.lte("continuo", 0);
+      }
+
+      const { data: productos, error } = await consulta;
 
       if (error) throw error;
 
-      if (!productos || productos.length === 0) {
+      const resultadosReales = filtrarProductosPorExistencia(
+        productos || [],
+        filtroConsulta
+      );
+
+      if (resultadosReales.length === 0) {
 
         caja.innerHTML = `
           <p class="sin-resultados">
-            No se encontró ningún producto.
+            No se encontraron productos para el filtro de existencia seleccionado.
           </p>
         `;
 
         return;
       }
 
-      const producto = productos[0];
+      caja.innerHTML = resultadosReales.map(producto => {
+        const stock = Number(producto.continuo ?? 0);
 
-      const stock = Number(producto.continuo ?? 0);
+        const estado = stock <= 0
+          ? ["no", "Agotado"]
+          : stock <= 3
+            ? ["poco", "Stock bajo"]
+            : ["ok", "Disponible"];
 
-      const estado = stock === 0
-        ? ["no", "No disponible"]
-        : stock <= 3
-          ? ["poco", "Por agotarse"]
-          : ["ok", "Disponible"];
+        return `
+          <dl class="ficha">
 
-      caja.innerHTML = `
-        <dl class="ficha">
+            <div class="dato">
+              <dt>Nombre</dt>
+              <dd>${escaparHTML(producto.nombre || "Sin nombre")}</dd>
+            </div>
 
-          <div class="dato">
-            <dt>Nombre</dt>
-            <dd>${escaparHTML(producto.nombre || "Sin nombre")}</dd>
-          </div>
+            <div class="dato">
+              <dt>Marca / Modelo</dt>
+              <dd>
+                ${escaparHTML(producto.marca || "-")}
+                ${escaparHTML(producto.modelo || "")}
+              </dd>
+            </div>
 
-          <div class="dato">
-            <dt>Marca / Modelo</dt>
-            <dd>
-              ${escaparHTML(producto.marca || "-")}
-              ${escaparHTML(producto.modelo || "")}
-            </dd>
-          </div>
+            <div class="dato">
+              <dt>Precio</dt>
+              <dd>${dinero(producto.precio)}</dd>
+            </div>
 
-          <div class="dato">
-            <dt>Precio</dt>
-            <dd>${dinero(producto.precio)}</dd>
-          </div>
+            <div class="dato">
+              <dt>Número de serie</dt>
+              <dd>${escaparHTML(producto.numserie || "N/A")}</dd>
+            </div>
 
-          <div class="dato">
-            <dt>Número de serie</dt>
-            <dd>${escaparHTML(producto.numserie || "N/A")}</dd>
-          </div>
+            <div class="dato">
+              <dt>Existencias</dt>
+              <dd>
+                <span class="estado estado--${estado[0]}">
+                  ${estado[1]} (${stock})
+                </span>
+              </dd>
+            </div>
 
-          <div class="dato">
-            <dt>Existencias</dt>
-            <dd>
-              <span class="estado estado--${estado[0]}">
-                ${estado[1]} (${stock})
-              </span>
-            </dd>
-          </div>
-
-        </dl>
-      `;
+          </dl>
+        `;
+      }).join("");
 
     } catch (error) {
 
@@ -1124,6 +1237,10 @@ function inicializarBusqueda() {
     }
   });
 }
+
+// Exponer utilidades de filtrado globalmente por si se invocan desde consola o vistas
+window.filtrarProductosPorExistencia = filtrarProductosPorExistencia;
+window.clasificarExistencia = clasificarExistencia;
 
 
 // 14. INICIALIZACIÓN GENERAL
