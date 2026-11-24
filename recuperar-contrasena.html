@@ -3,28 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Recuperar contraseña | Instrumentos Sintek</title>
+
+  <title>Recuperar contraseña | Instrumentos Syntek</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
   <link rel="stylesheet" href="estilos.css">
+
   <script src="layout.js"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    defer
+  ></script>
+
+  <script src="autenticacion.js" defer></script>
+
+  <style>
+    .mensaje-auth {
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .mensaje-success {
+      background: #e5f7eb;
+      color: #176b36;
+    }
+
+    .mensaje-error {
+      background: #fde8e8;
+      color: #a32121;
+    }
+
+    .mensaje-auth[hidden] {
+      display: none;
+    }
+  </style>
 </head>
+
 <body class="pagina-login">
 
   <main class="contenido">
     <section class="tarjeta-login">
-      <h1 class="titulo">Recuperar contraseña</h1>
-      <p class="nota">Escribe tu correo y te enviaremos un enlace para crear una contraseña nueva.</p>
-      <!-- Más adelante el servidor enviará el correo con el enlace. -->
-      <form action="index.html" method="post">
-      <div class="campo"><label for="correo">Correo electrónico <span class="requerido" aria-hidden="true">*</span></label><input type="email" id="correo" name="correo" required autocomplete="email"></div>
-        <div class="acciones">
-          <button type="submit" class="boton">Enviar enlace</button>
-          <a href="index.html" class="boton boton--contorno">Regresar</a>
+
+      <h1 class="titulo">
+        Recuperar contraseña
+      </h1>
+
+      <p class="nota">
+        Escribe el correo electrónico asociado a tu cuenta.
+        Te enviaremos un enlace para crear una contraseña nueva.
+      </p>
+
+      <form id="form-recuperar">
+
+        <div class="campo">
+          <label for="correo">
+            Correo electrónico
+          </label>
+
+          <input
+            type="email"
+            id="correo"
+            name="correo"
+            placeholder="correo@ejemplo.com"
+            autocomplete="email"
+            required
+          >
         </div>
+
+        <p
+          id="mensaje-auth"
+          class="mensaje-auth"
+          role="status"
+          aria-live="polite"
+          hidden
+        ></p>
+
+        <div class="acciones">
+
+          <button type="submit" class="boton">
+            Enviar enlace
+          </button>
+
+          <a
+            href="index.html"
+            class="boton boton--contorno"
+          >
+            Regresar
+          </a>
+
+        </div>
+
       </form>
+
     </section>
   </main>
 

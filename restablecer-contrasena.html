@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Nueva contraseña | Instrumentos Syntek</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="estilos.css">
+
+  <script src="layout.js"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    defer
+  ></script>
+
+  <script src="autenticacion.js" defer></script>
+
+  <style>
+    .mensaje-auth {
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .mensaje-success {
+      background: #e5f7eb;
+      color: #176b36;
+    }
+
+    .mensaje-error {
+      background: #fde8e8;
+      color: #a32121;
+    }
+
+    .mensaje-auth[hidden],
+    #contenedor-restablecer[hidden] {
+      display: none;
+    }
+  </style>
+</head>
+
+<body class="pagina-login">
+
+  <main class="contenido">
+
+    <section class="tarjeta-login">
+
+      <h1 class="titulo">
+        Crear nueva contraseña
+      </h1>
+
+      <p class="nota">
+        Ingresa tu nueva contraseña y confírmala para recuperar
+        el acceso a tu cuenta.
+      </p>
+
+      <p
+        id="mensaje-auth"
+        class="mensaje-auth"
+        role="status"
+        aria-live="polite"
+      >
+        Verificando el enlace de recuperación...
+      </p>
+
+      <div id="contenedor-restablecer" hidden>
+
+        <form id="form-restablecer">
+
+          <div class="campo">
+
+            <label for="nueva-contrasena">
+              Nueva contraseña
+            </label>
+
+            <input
+              type="password"
+              id="nueva-contrasena"
+              minlength="8"
+              autocomplete="new-password"
+              placeholder="Mínimo 8 caracteres"
+              required
+            >
+
+          </div>
+
+          <div class="campo">
+
+            <label for="confirmar-contrasena">
+              Confirmar nueva contraseña
+            </label>
+
+            <input
+              type="password"
+              id="confirmar-contrasena"
+              minlength="8"
+              autocomplete="new-password"
+              placeholder="Repite tu contraseña"
+              required
+            >
+
+          </div>
+
+          <div class="acciones">
+
+            <button type="submit" class="boton">
+              Guardar nueva contraseña
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="acciones">
+
+        <a
+          href="index.html"
+          class="boton boton--contorno"
+        >
+          Volver al inicio de sesión
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</body>
+</html>
