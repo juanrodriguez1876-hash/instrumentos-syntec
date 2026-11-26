@@ -591,3 +591,74 @@ body.pagina-login, body.pagina-tarjeta { height: 100dvh; overflow: hidden; }
     overflow-x: auto;
   }
 }
+
+/* =====================================================
+   ISSUE-020 - RESULTADOS Y DETALLES DE PRODUCTOS
+===================================================== */
+
+.lista-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.producto-resultado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+}
+
+.producto-resultado h3 {
+  margin: 0 0 8px;
+  font-family: var(--fuente-titulos);
+}
+
+.producto-resultado p {
+  margin: 4px 0;
+  color: var(--texto-suave);
+  font-size: 14px;
+}
+
+.detalle-producto {
+  width: 100%;
+}
+
+.detalle-producto__encabezado {
+  margin-bottom: 24px;
+}
+
+.detalle-producto__encabezado h2 {
+  margin: 0 0 12px;
+  font-family: var(--fuente-titulos);
+}
+
+.detalle-producto .ficha {
+  margin-top: 20px;
+}
+
+.detalle-producto .dato {
+  padding: 14px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+}
+
+@media (max-width: 600px) {
+
+  .producto-resultado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .producto-resultado .boton {
+    width: 100%;
+  }
+
+}
