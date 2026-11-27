@@ -1,31 +1,894 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Gestionar inventario | Instrumentos Sintek</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="estilos.css">
+
   <script src="layout.js"></script>
   <script src="app.js" defer></script>
+
+  <style>
+    /* ISSUE-012: Gestión y edición de productos */
+
+    .issue012 {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      color: var(--texto);
+    }
+
+    .issue012-barra {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .issue012-busqueda {
+      flex: 1;
+      min-width: 220px;
+      max-width: 450px;
+    }
+
+    .issue012-resumen {
+      color: var(--texto-suave);
+      font-size: 13px;
+    }
+
+    .issue012-tabla {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      box-shadow: var(--sombra);
+    }
+
+    .issue012-tabla table {
+      width: 100%;
+      min-width: 850px;
+      border-collapse: collapse;
+    }
+
+    .issue012-tabla th {
+      padding: 14px;
+      text-align: left;
+      color: var(--texto-suave);
+      background: var(--superficie-2);
+      border-bottom: 1px solid var(--borde);
+      font-size: 13px;
+    }
+
+    .issue012-tabla td {
+      padding: 14px;
+      border-bottom: 1px solid var(--borde);
+      color: var(--texto);
+      vertical-align: middle;
+    }
+
+    .issue012-tabla tr:last-child td {
+      border-bottom: none;
+    }
+
+    .issue012-tabla tbody tr:hover {
+      background: var(--superficie-2);
+    }
+
+    .issue012-descripcion {
+      max-width: 240px;
+      color: var(--texto-suave) !important;
+      font-size: 13px;
+    }
+
+    .issue012-acciones {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .issue012-editar {
+      background: var(--primario);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 9px 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .issue012-editar:hover {
+      background: var(--primario-hover);
+    }
+
+    .issue012-modal[hidden] {
+      display: none !important;
+    }
+
+    .issue012-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, .65);
+      overflow-y: auto;
+    }
+
+    .issue012-dialogo {
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 25px;
+      border-radius: 12px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      color: var(--texto);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, .3);
+    }
+
+    .issue012-dialogo h2 {
+      margin: 0 0 5px;
+      font-family: var(--fuente-titulos);
+      font-size: 25px;
+    }
+
+    .issue012-ayuda {
+      margin: 0 0 20px;
+      color: var(--texto-suave);
+      font-size: 13px;
+    }
+
+    .issue012-formulario {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .issue012-campo {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .issue012-campo label {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .issue012-campo input,
+    .issue012-campo textarea {
+      width: 100%;
+      min-width: 0;
+      padding: 11px 12px;
+      color: var(--texto);
+      background: var(--superficie-2);
+      border: 1px solid var(--borde);
+      border-radius: 6px;
+      font: inherit;
+    }
+
+    .issue012-campo textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
+
+    .issue012-completo {
+      grid-column: 1 / -1;
+    }
+
+    .issue012-campo input:focus,
+    .issue012-campo textarea:focus {
+      outline: 2px solid var(--primario);
+      outline-offset: 1px;
+    }
+
+    .issue012-botones {
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .issue012-botones button {
+      min-height: 42px;
+    }
+
+    .issue012-mensaje {
+      padding: 25px !important;
+      text-align: center;
+      color: var(--texto-suave) !important;
+    }
+
+    .issue012-estado {
+      padding: 12px 15px;
+      border-radius: 7px;
+      background: var(--superficie-2);
+      color: var(--texto-suave);
+      font-size: 13px;
+    }
+
+    @media(max-width: 520px) {
+      .issue012-formulario {
+        grid-template-columns: 1fr;
+      }
+
+      .issue012-completo {
+        grid-column: auto;
+      }
+
+      .issue012-dialogo {
+        padding: 18px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
   <main class="contenido">
+
     <h1 class="titulo">Gestionar inventario</h1>
-    <p class="subtitulo">Lista de productos</p>
-    <div class="tabla-contenedor"><table class="tabla tabla--tarjetas" aria-label="Productos">
-      <thead><tr><th scope="col">Producto</th><th scope="col">Precio</th><th scope="col">Modelo</th><th scope="col">ID</th><th scope="col">Descripción</th></tr></thead>
-      <tbody>
-        <tr><td data-label="Producto">Guitarra acústica</td><td data-label="Precio">$3,500.00</td><td data-label="Modelo">GRS-329</td><td data-label="ID">23564</td><td data-label="Descripción">Madera de pino, cuerdas de cobre, estilo flamenco</td></tr>
-        <tr><td data-label="Producto">Violín</td><td data-label="Precio">$5,700.00</td><td data-label="Modelo">Mozart edition</td><td data-label="ID">23678</td><td data-label="Descripción">Madera de pino, cuerdas de nylon y acero</td></tr>
-        <tr><td data-label="Producto">Ukelele</td><td data-label="Precio">$2,500.00</td><td data-label="Modelo">Hawaian series</td><td data-label="ID">23654</td><td data-label="Descripción">—</td></tr>
-        <tr><td data-label="Producto">Saxofón</td><td data-label="Precio">$8,500.00</td><td data-label="Modelo">Jazzmaster</td><td data-label="ID">73456</td><td data-label="Descripción">—</td></tr>
-        <tr><td data-label="Producto">Guitarra eléctrica</td><td data-label="Precio">$8,700.00</td><td data-label="Modelo">Les Paul</td><td data-label="ID">73145</td><td data-label="Descripción">—</td></tr>
-        <tr><td data-label="Producto">Piano</td><td data-label="Precio">$60,000.00</td><td data-label="Modelo">Classic series</td><td data-label="ID">73903</td><td data-label="Descripción">—</td></tr>
-        <tr><td data-label="Producto">Teclado</td><td data-label="Precio">$15,000.00</td><td data-label="Modelo">Synteks edition</td><td data-label="ID">73415</td><td data-label="Descripción">—</td></tr>
-      </tbody></table></div>
+
+    <p class="subtitulo">
+      Consulta, administra y actualiza la información de tus productos
+    </p>
+
+    <section class="issue012">
+
+      <!-- BUSCADOR -->
+
+      <div class="issue012-barra">
+
+        <input
+          type="search"
+          id="issue012-buscar"
+          class="issue012-busqueda"
+          placeholder="Buscar por nombre, código o categoría..."
+          aria-label="Buscar productos"
+        >
+
+        <button
+          type="button"
+          id="issue012-actualizar"
+          class="boton boton--contorno">
+          Actualizar lista
+        </button>
+
+      </div>
+
+      <div class="issue012-resumen" id="issue012-resumen">
+        Cargando productos...
+      </div>
+
+
+      <!-- TABLA -->
+
+      <div class="issue012-tabla">
+
+        <table aria-label="Gestión de productos">
+
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th>Precio</th>
+              <th>Modelo</th>
+              <th>Descripción</th>
+              <th>Existencias</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="issue012-lista">
+
+            <tr>
+              <td colspan="7" class="issue012-mensaje">
+                Conectando con Supabase...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="issue012-estado" id="issue012-estado">
+        Preparando módulo de edición...
+      </div>
+
+    </section>
+
   </main>
+
+
+  <!-- VENTANA DE EDICIÓN -->
+
+  <div
+    class="issue012-modal"
+    id="issue012-modal"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="issue012-titulo">
+
+    <div class="issue012-dialogo">
+
+      <h2 id="issue012-titulo">Editar producto</h2>
+
+      <p class="issue012-ayuda">
+        Modifica la información del producto seleccionado.
+        Los cambios se guardarán en Supabase.
+      </p>
+
+      <form id="issue012-formulario">
+
+        <input
+          type="hidden"
+          id="issue012-id"
+        >
+
+        <div class="issue012-formulario">
+
+          <div class="issue012-campo">
+            <label for="issue012-nombre">
+              Nombre del producto
+            </label>
+
+            <input
+              type="text"
+              id="issue012-nombre"
+              maxlength="200"
+              required
+            >
+          </div>
+
+          <div class="issue012-campo">
+            <label for="issue012-categoria">
+              Categoría
+            </label>
+
+            <input
+              type="text"
+              id="issue012-categoria"
+              maxlength="150"
+              placeholder="Ej. Cuerdas, guitarras..."
+            >
+          </div>
+
+          <div class="issue012-campo issue012-completo">
+            <label for="issue012-descripcion">
+              Descripción
+            </label>
+
+            <textarea
+              id="issue012-descripcion"
+              maxlength="2000"
+              placeholder="Describe las características del producto..."
+            ></textarea>
+          </div>
+
+          <div class="issue012-campo">
+            <label for="issue012-precio">
+              Precio
+            </label>
+
+            <input
+              type="number"
+              id="issue012-precio"
+              min="0"
+              step="0.01"
+              required
+            >
+          </div>
+
+          <div class="issue012-campo">
+            <label for="issue012-serie">
+              Número de serie
+            </label>
+
+            <input
+              type="text"
+              id="issue012-serie"
+              readonly
+            >
+          </div>
+
+        </div>
+
+        <div class="issue012-botones">
+
+          <button
+            type="button"
+            id="issue012-cancelar"
+            class="boton boton--contorno">
+            Cancelar
+          </button>
+
+          <button
+            type="submit"
+            id="issue012-guardar"
+            class="boton">
+            Guardar cambios
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- FUNCIONES ISSUE-012 -->
+
+  <script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    const lista = document.getElementById("issue012-lista");
+    const modal = document.getElementById("issue012-modal");
+    const formulario = document.getElementById("issue012-formulario");
+
+    const buscador = document.getElementById("issue012-buscar");
+
+    const resumen = document.getElementById("issue012-resumen");
+    const estado = document.getElementById("issue012-estado");
+
+    const botonGuardar = document.getElementById("issue012-guardar");
+
+    let productos = [];
+    let cargando = false;
+
+
+    // PROTEGER TEXTO INSERTADO EN HTML
+
+    function escapar(valor) {
+
+      return String(valor ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[c]);
+
+    }
+
+
+    // FORMATO DE PRECIO
+
+    function dinero(valor) {
+
+      return "$" + Number(valor || 0).toLocaleString("es-MX", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+    }
+
+
+    // MOSTRAR PRODUCTOS
+
+    function mostrarProductos() {
+
+      const termino = buscador.value.trim().toLowerCase();
+
+      const filtrados = productos.filter(p => {
+
+        return (
+          String(p.nombre || "").toLowerCase().includes(termino) ||
+          String(p.numserie || "").toLowerCase().includes(termino) ||
+          String(p.identificacion ?? "").toLowerCase().includes(termino) ||
+          String(p.tipo_producto || "").toLowerCase().includes(termino)
+        );
+
+      });
+
+      resumen.textContent =
+        "Productos registrados: " + productos.length +
+        " | Resultados: " + filtrados.length;
+
+      if (!filtrados.length) {
+
+        lista.innerHTML = `
+          <tr>
+            <td colspan="7" class="issue012-mensaje">
+              No se encontraron productos.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      lista.innerHTML = filtrados.map(p => {
+
+        return `
+          <tr>
+
+            <td>
+              <strong>${escapar(p.nombre || "Sin nombre")}</strong>
+              <br>
+              <small>ID: ${escapar(p.identificacion)}</small>
+            </td>
+
+            <td>
+              ${escapar(p.tipo_producto || "Sin categoría")}
+            </td>
+
+            <td>
+              ${dinero(p.precio)}
+            </td>
+
+            <td>
+              ${escapar(p.modelo || "-")}
+            </td>
+
+            <td class="issue012-descripcion">
+              ${escapar(p.descripcion || "Sin descripción")}
+            </td>
+
+            <td>
+              ${Number(p.continuo ?? 0)}
+            </td>
+
+            <td>
+              <div class="issue012-acciones">
+
+                <button
+                  type="button"
+                  class="issue012-editar"
+                  data-editar="${escapar(p.identificacion)}">
+                  Editar
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+    }
+
+
+    // CONSULTAR SUPABASE
+
+    async function cargarProductos() {
+
+      if (cargando) return;
+
+      if (typeof db === "undefined" || !db) {
+
+        estado.textContent =
+          "Esperando conexión con Supabase...";
+
+        return;
+
+      }
+
+      cargando = true;
+
+      estado.textContent = "Consultando productos...";
+
+      try {
+
+        const { data, error } = await db
+          .from("productos")
+          .select("*")
+          .order("identificacion", { ascending: true });
+
+        if (error) throw error;
+
+        productos = data || [];
+
+        mostrarProductos();
+
+        estado.textContent =
+          "Información sincronizada correctamente con Supabase.";
+
+      } catch(error) {
+
+        console.error("ISSUE-012:", error);
+
+        estado.textContent =
+          "Error al cargar productos: " + error.message;
+
+        lista.innerHTML = `
+          <tr>
+            <td colspan="7" class="issue012-mensaje">
+              No se pudieron cargar los productos.
+              Comprueba la conexión y los permisos de Supabase.
+            </td>
+          </tr>
+        `;
+
+      } finally {
+
+        cargando = false;
+
+      }
+
+    }
+
+
+    // ABRIR EDITOR
+
+    function abrirEditor(id) {
+
+      const producto = productos.find(p =>
+        String(p.identificacion) === String(id)
+      );
+
+      if (!producto) {
+
+        alert("No se encontró el producto seleccionado.");
+
+        return;
+
+      }
+
+      document.getElementById("issue012-id").value =
+        producto.identificacion;
+
+      document.getElementById("issue012-nombre").value =
+        producto.nombre || "";
+
+      document.getElementById("issue012-categoria").value =
+        producto.tipo_producto || "";
+
+      document.getElementById("issue012-descripcion").value =
+        producto.descripcion || "";
+
+      document.getElementById("issue012-precio").value =
+        Number(producto.precio || 0);
+
+      document.getElementById("issue012-serie").value =
+        producto.numserie || "";
+
+      modal.hidden = false;
+
+      document.getElementById("issue012-nombre").focus();
+
+    }
+
+
+    // CERRAR EDITOR
+
+    function cerrarEditor() {
+
+      modal.hidden = true;
+
+      formulario.reset();
+
+    }
+
+
+    document.getElementById("issue012-cancelar")
+      .addEventListener("click", cerrarEditor);
+
+
+    modal.addEventListener("click", function(event) {
+
+      if (event.target === modal) {
+        cerrarEditor();
+      }
+
+    });
+
+
+    document.addEventListener("keydown", function(event) {
+
+      if (event.key === "Escape" && !modal.hidden) {
+        cerrarEditor();
+      }
+
+    });
+
+
+    // DETECTAR BOTÓN EDITAR
+
+    lista.addEventListener("click", function(event) {
+
+      const boton = event.target.closest("[data-editar]");
+
+      if (!boton) return;
+
+      abrirEditor(boton.dataset.editar);
+
+    });
+
+
+    // GUARDAR MODIFICACIONES
+
+    formulario.addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      if (typeof db === "undefined" || !db) {
+
+        alert("No existe conexión con Supabase.");
+
+        return;
+
+      }
+
+      const id = document.getElementById("issue012-id").value;
+
+      const nombre = document.getElementById("issue012-nombre")
+        .value.trim();
+
+      const categoria = document.getElementById("issue012-categoria")
+        .value.trim();
+
+      const descripcion = document.getElementById("issue012-descripcion")
+        .value.trim();
+
+      const precio = Number(
+        document.getElementById("issue012-precio").value
+      );
+
+      if (!nombre) {
+
+        alert("El nombre del producto es obligatorio.");
+
+        return;
+
+      }
+
+      if (!Number.isFinite(precio) || precio < 0) {
+
+        alert("Introduce un precio válido.");
+
+        return;
+
+      }
+
+      const productoOriginal = productos.find(p =>
+        String(p.identificacion) === String(id)
+      );
+
+      if (!productoOriginal) {
+
+        alert("No se encontró el producto que deseas actualizar.");
+
+        return;
+
+      }
+
+      botonGuardar.disabled = true;
+      botonGuardar.textContent = "Guardando...";
+
+      try {
+
+        // Actualizar únicamente los campos solicitados.
+        // La cantidad, serie, marca y modelo permanecen intactos.
+
+        const nuevoTotal =
+          precio * Number(productoOriginal.continuo ?? 0);
+
+        const { error } = await db
+          .from("productos")
+          .update({
+            nombre: nombre,
+            descripcion: descripcion || null,
+            tipo_producto: categoria || null,
+            precio: precio,
+            total_parcial: nuevoTotal
+          })
+          .eq("identificacion", id);
+
+        if (error) throw error;
+
+        cerrarEditor();
+
+        await cargarProductos();
+
+        estado.textContent =
+          "Producto actualizado correctamente.";
+
+        if (typeof mostrarAviso === "function") {
+          mostrarAviso("Producto actualizado correctamente");
+        } else {
+          alert("Producto actualizado correctamente.");
+        }
+
+      } catch(error) {
+
+        console.error("Error ISSUE-012:", error);
+
+        alert(
+          "No se pudieron guardar los cambios:\n" +
+          error.message
+        );
+
+      } finally {
+
+        botonGuardar.disabled = false;
+        botonGuardar.textContent = "Guardar cambios";
+
+      }
+
+    });
+
+
+    // BUSCADOR
+
+    buscador.addEventListener("input", mostrarProductos);
+
+
+    // ACTUALIZACIÓN MANUAL
+
+    document.getElementById("issue012-actualizar")
+      .addEventListener("click", cargarProductos);
+
+
+    // ESPERAR INICIALIZACIÓN DE APP.JS
+
+    async function iniciar() {
+
+      let intentos = 0;
+
+      while (
+        (typeof db === "undefined" || !db) &&
+        intentos < 200
+      ) {
+
+        await new Promise(resolve =>
+          setTimeout(resolve, 100)
+        );
+
+        intentos++;
+
+      }
+
+      if (typeof db === "undefined" || !db) {
+
+        estado.textContent =
+          "No se pudo conectar con Supabase.";
+
+        lista.innerHTML = `
+          <tr>
+            <td colspan="7" class="issue012-mensaje">
+              No hay conexión con la base de datos.
+              Recarga la página e inténtalo nuevamente.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      await cargarProductos();
+
+    }
+
+    iniciar();
+
+  });
+
+  </script>
+
 </body>
 </html>
