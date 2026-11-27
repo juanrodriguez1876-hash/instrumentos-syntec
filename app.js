@@ -295,41 +295,16 @@ async function cargarHistorialVentas(tabla) {
 
 // 6. CARGAR TABLAS DE INVENTARIO Y CONSULTA
 
-function obtenerFiltrosTablaProductos() {
+function obtenerFiltroNombreTabla() {
   const inputNombre =
     document.getElementById("buscar-nombre") ||
     document.getElementById("nombre-producto") ||
     document.getElementById("buscar");
-  const selectCategoria =
-    document.getElementById("filtro-categoria") ||
-    document.getElementById("categoria") ||
-    document.getElementById("tipo_producto");
 
-  const nombre = inputNombre ? inputNombre.value.trim() : "";
-  const categoria = selectCategoria ? selectCategoria.value.trim() : "";
-
-  return { nombre, categoria };
+  return inputNombre ? inputNombre.value.trim() : "";
 }
 
-function construirConsultaProductos(nombre, categoria) {
-  let consulta = db
-    .from("productos")
-    .select("*");
-
-  if (nombre) {
-    const terminoNombre = nombre.replace(/[,%()]/g, "");
-    consulta = consulta.ilike("nombre", `%${terminoNombre}%`);
-  }
-
-  if (categoria) {
-    const terminoCategoria = categoria.replace(/[,%()]/g, "");
-    consulta = consulta.ilike("tipo_producto", `%${terminoCategoria}%`);
-  }
-
-  return consulta;
-}
-
-async function cargarTablaProductos(tabla, filtrosOverride = null) {
+async function cargarTablaProductos(tabla, nombreOverride = null) {
 
   const tbody = tabla.querySelector("tbody");
 
@@ -339,9 +314,16 @@ async function cargarTablaProductos(tabla, filtrosOverride = null) {
     tabla.querySelectorAll("thead th")
   ).map(th => th.textContent.trim().toLowerCase());
 
-  const { nombre, categoria } = filtrosOverride || obtenerFiltrosTablaProductos();
+  const nombre = nombreOverride !== null ? nombreOverride : obtenerFiltroNombreTabla();
 
-  const consulta = construirConsultaProductos(nombre, categoria);
+  let consulta = db
+    .from("productos")
+    .select("*");
+
+  if (nombre) {
+    const termino = nombre.replace(/[,%()]/g, "");
+    consulta = consulta.ilike("nombre", `%${termino}%`);
+  }
 
   const { data: productos, error } = await consulta
     .order("identificacion", { ascending: true });
@@ -352,12 +334,8 @@ async function cargarTablaProductos(tabla, filtrosOverride = null) {
   }
 
   if (!productos || productos.length === 0) {
-    const partesVacio = [];
-    if (nombre) partesVacio.push(`con el nombre "${escaparHTML(nombre)}"`);
-    if (categoria) partesVacio.push(`en la categoría "${escaparHTML(categoria)}"`);
-
-    const mensajeVacio = partesVacio.length > 0
-      ? `No hay productos ${partesVacio.join(" ")}.`
+    const mensajeVacio = nombre
+      ? `No hay productos con el nombre "${escaparHTML(nombre)}".`
       : "No hay productos registrados.";
 
     tbody.innerHTML = `
@@ -1066,58 +1044,109 @@ function inicializarFormulariosDemo() {
 }
 
 
-// 13. CONSULTAR EXISTENCIAS POR NOMBRE Y CATEGORÍA (ISSUE-015 / ISSUE-016)
+// 13. CONSULTAR EXISTENCIAS POR NOMBRE (ISSUE-015)
 
 function renderizarFichaProducto(producto) {
   const stock = Number(producto.continuo ?? 0);
 
   const estado = stock === 0
-    ? ["no", "No disponible"]
+    ? ["no", "Sin existencias"]
     : stock <= 3
-      ? ["poco", "Por agotarse"]
+      ? ["poco", "Existencias bajas"]
       : ["ok", "Disponible"];
 
   return `
-    <dl class="ficha">
-
-      <div class="dato">
-        <dt>Nombre</dt>
-        <dd>${escaparHTML(producto.nombre || "Sin nombre")}</dd>
+    <article class="producto-resultado">
+      <div class="producto-resultado__informacion">
+        <h3>${escaparHTML(producto.nombre || "Producto sin nombre")}</h3>
+        <p><strong>Código:</strong> ${escaparHTML(producto.numserie || "No registrado")}</p>
+        <p><strong>Precio:</strong> ${dinero(producto.precio)}</p>
+        <p><strong>Existencias:</strong> ${stock}</p>
       </div>
 
-      <div class="dato">
-        <dt>Categoría</dt>
-        <dd>${escaparHTML(producto.tipo_producto || "-")}</dd>
+      <div class="producto-resultado__acciones">
+        <span class="estado estado--${estado[0]}">${estado[1]}</span>
+        <button
+          type="button"
+          class="boton btn-ver-detalles"
+          data-producto-id="${escaparHTML(producto.identificacion)}">
+          Ver detalles
+        </button>
+      </div>
+    </article>
+  `;
+}
+
+function renderizarDetalleProducto(producto) {
+  const stock = Number(producto.continuo ?? 0);
+
+  const estado = stock === 0
+    ? ["no", "Sin existencias"]
+    : stock <= 3
+      ? ["poco", "Existencias bajas"]
+      : ["ok", "Disponible"];
+
+  const nombresCampos = {
+    identificacion: "Identificación del producto",
+    numserie: "Código / Número de serie",
+    nombre: "Nombre del producto",
+    precio: "Precio",
+    tipo_producto: "Categoría",
+    marca: "Marca",
+    modelo: "Modelo",
+    continuo: "Existencias",
+    total_parcial: "Valor total del inventario",
+    descripcion: "Descripción",
+    created_at: "Fecha de registro"
+  };
+
+  const detalles = Object.entries(producto).map(([campo, valor]) => {
+    let contenido;
+
+    if (valor === null || valor === undefined || valor === "") {
+      contenido = "No registrado";
+    } else if (campo === "precio" || campo === "total_parcial") {
+      contenido = dinero(valor);
+    } else if (campo === "continuo") {
+      contenido = Number(valor).toLocaleString("es-MX");
+    } else if (typeof valor === "object") {
+      contenido = JSON.stringify(valor);
+    } else {
+      contenido = String(valor);
+    }
+
+    return `
+      <div class="detalle-producto-dato">
+        <dt>${escaparHTML(nombresCampos[campo] || campo)}</dt>
+        <dd>${escaparHTML(contenido)}</dd>
+      </div>
+    `;
+  }).join("");
+
+  return `
+    <section class="detalle-producto" aria-label="Detalles del producto">
+      <div class="detalle-producto__encabezado">
+        <div>
+          <span class="detalle-producto-etiqueta">DETALLES DEL PRODUCTO</span>
+          <h2>${escaparHTML(producto.nombre || "Producto sin nombre")}</h2>
+          <p>Código: ${escaparHTML(producto.numserie || "No registrado")}</p>
+        </div>
+        <span class="estado estado--${estado[0]}">${estado[1]} (${stock})</span>
       </div>
 
-      <div class="dato">
-        <dt>Marca / Modelo</dt>
-        <dd>
-          ${escaparHTML(producto.marca || "-")}
-          ${escaparHTML(producto.modelo || "")}
-        </dd>
+      <div class="detalle-producto-contenido">
+        <h3>Información registrada en el sistema</h3>
+        <dl class="detalle-producto-lista">
+          ${detalles}
+        </dl>
       </div>
 
-      <div class="dato">
-        <dt>Precio</dt>
-        <dd>${dinero(producto.precio)}</dd>
+      <div class="acciones detalle-producto-acciones">
+        <button type="button" class="boton" id="btn-regresar-resultados">
+          ← Regresar a resultados
+        </button>
       </div>
-
-      <div class="dato">
-        <dt>Número de serie</dt>
-        <dd>${escaparHTML(producto.numserie || "N/A")}</dd>
-      </div>
-
-      <div class="dato">
-        <dt>Existencias</dt>
-        <dd>
-          <span class="estado estado--${estado[0]}">
-            ${estado[1]} (${stock})
-          </span>
-        </dd>
-      </div>
-
-    </dl>
+    </section>
   `;
 }
 
@@ -1143,100 +1172,23 @@ function esPestanaExistenciasActiva() {
   if (
     pagina.includes("existencia") ||
     pagina.includes("inventario") ||
-    pagina.includes("almacen") ||
-    pagina.includes("catalogo") ||
     document.getElementById("vista-existencias") ||
-    document.getElementById("existencias") ||
-    document.getElementById("inventario")
+    document.getElementById("existencias")
   ) {
     return true;
   }
 
-  const navActiva = document.querySelector(
-    '.nav[aria-current], .tab.activa, .tab.active, [aria-selected="true"], a.activo, button.activo'
-  );
-  if (navActiva) {
-    const textoNav = navActiva.textContent.toLowerCase();
-    if (
-      textoNav.includes("existencia") ||
-      textoNav.includes("inventario") ||
-      textoNav.includes("almacén") ||
-      textoNav.includes("almacen")
-    ) {
-      return true;
-    }
+  const navActiva = document.querySelector('.nav[aria-current], .tab.activa, .tab.active, [aria-selected="true"]');
+  if (navActiva && navActiva.textContent.toLowerCase().includes("existencia")) {
+    return true;
   }
 
   const tituloPrincipal = document.querySelector(".superior .titulo, h1");
-  if (tituloPrincipal) {
-    const textoTitulo = tituloPrincipal.textContent.toLowerCase();
-    if (
-      textoTitulo.includes("existencia") ||
-      textoTitulo.includes("inventario") ||
-      textoTitulo.includes("almacén") ||
-      textoTitulo.includes("almacen")
-    ) {
-      return true;
-    }
+  if (tituloPrincipal && tituloPrincipal.textContent.toLowerCase().includes("existencia")) {
+    return true;
   }
 
-  return document.querySelector("table:not(#tabla-carrito-venta)") !== null;
-}
-
-async function poblarSelectorCategorias(selectCategoria) {
-  if (!selectCategoria) return;
-
-  const valorActual = selectCategoria.value;
-  const categoriasBase = [
-    "Guitarras",
-    "Bajos",
-    "Teclados y Pianos",
-    "Baterías y Percusión",
-    "Accesorios"
-  ];
-
-  let categoriasBD = [];
-
-  if (db) {
-    const { data, error } = await db
-      .from("productos")
-      .select("tipo_producto");
-
-    if (!error && Array.isArray(data)) {
-      categoriasBD = data
-        .map(item => (item.tipo_producto || "").trim())
-        .filter(Boolean);
-    } else if (error) {
-      console.error("Error cargando categorías:", error.message);
-    }
-  }
-
-  const mapaUnico = new Map();
-  [...categoriasBase, ...categoriasBD].forEach(cat => {
-    const clave = cat.toLowerCase();
-    if (!mapaUnico.has(clave)) {
-      mapaUnico.set(clave, cat);
-    }
-  });
-
-  const categoriasFinales = Array.from(mapaUnico.values())
-    .sort((a, b) => a.localeCompare(b, "es"));
-
-  selectCategoria.innerHTML = `
-    <option value="">Todas las categorías</option>
-    ${categoriasFinales.map(cat => `
-      <option value="${escaparHTML(cat)}">${escaparHTML(cat)}</option>
-    `).join("")}
-  `;
-
-  if (valorActual) {
-    const coincidencia = categoriasFinales.find(
-      c => c.toLowerCase() === valorActual.toLowerCase()
-    );
-    if (coincidencia) {
-      selectCategoria.value = coincidencia;
-    }
-  }
+  return false;
 }
 
 function asegurarControlesExistencias() {
@@ -1280,7 +1232,6 @@ function asegurarControlesExistencias() {
   const contenedorDestino =
     document.getElementById("vista-existencias") ||
     document.getElementById("existencias") ||
-    document.getElementById("inventario") ||
     document.getElementById("resultado")?.parentElement ||
     document.querySelector("table:not(#tabla-carrito-venta)")?.parentElement ||
     document.querySelector("main") ||
@@ -1299,13 +1250,6 @@ function asegurarControlesExistencias() {
         name="buscar-nombre"
         placeholder="Ej. Guitarra, Piano, Bajo..."
       >
-    </div>
-
-    <div class="campo-busqueda campo-busqueda--categoria">
-      <label for="filtro-categoria">Categoría</label>
-      <select id="filtro-categoria" name="filtro-categoria">
-        <option value="">Todas las categorías</option>
-      </select>
     </div>
 
     <div class="acciones-busqueda">
@@ -1336,130 +1280,190 @@ function asegurarControlesExistencias() {
   return { formulario, cajaResultado };
 }
 
-async function ejecutarBusquedaExistencias(formulario, cajaResultado, selectCategoria) {
-  if (db) {
-    await cargarTablasAutomaticamente();
+function inicializarBusqueda() {
+  const { formulario, cajaResultado } = asegurarControlesExistencias();
+  if (!formulario || !cajaResultado) return;
+
+  const caja = cajaResultado;
+  let productosEncontrados = [];
+  let textoResumen = "";
+
+  // Añadir el botón Limpiar si esta página todavía no lo tiene.
+  let btnLimpiar = document.getElementById("btn-limpiar-existencias");
+  if (!btnLimpiar) {
+    btnLimpiar = document.createElement("button");
+    btnLimpiar.type = "button";
+    btnLimpiar.id = "btn-limpiar-existencias";
+    btnLimpiar.className = "boton boton--contorno";
+    btnLimpiar.textContent = "Limpiar";
+    const btnBuscar = formulario.querySelector('button[type="submit"]');
+    if (btnBuscar) {
+      btnBuscar.insertAdjacentElement("afterend", btnLimpiar);
+    } else {
+      formulario.appendChild(btnLimpiar);
+    }
   }
 
-  if (!cajaResultado) return;
-
-  if (!db) {
-    cajaResultado.innerHTML = `
-      <p class="sin-resultados">
-        No hay conexión con la base de datos.
-      </p>
-    `;
-    return;
-  }
-
-  const inputNombre =
-    document.getElementById("buscar-nombre") ||
-    document.getElementById("nombre-producto") ||
-    document.getElementById("buscar");
-
-  const busquedaNombre = inputNombre ? inputNombre.value.trim() : "";
-  const categoriaSeleccionada = selectCategoria ? selectCategoria.value.trim() : "";
-
-  cajaResultado.innerHTML = "<p>Buscando productos en existencias...</p>";
-
-  try {
-    const consulta = construirConsultaProductos(busquedaNombre, categoriaSeleccionada);
-    const { data: productos, error } = await consulta.order("nombre", { ascending: true });
-
-    if (error) throw error;
-
-    if (!productos || productos.length === 0) {
-      const partesVacio = [];
-      if (busquedaNombre) partesVacio.push(`con el nombre "${escaparHTML(busquedaNombre)}"`);
-      if (categoriaSeleccionada) partesVacio.push(`en la categoría "${escaparHTML(categoriaSeleccionada)}"`);
-
-      cajaResultado.innerHTML = `
-        <p class="sin-resultados">
-          No se encontró ningún producto ${partesVacio.join(" ") || "en existencias"}.
-        </p>
-      `;
-      return;
-    }
-
-    const tieneFiltro = Boolean(busquedaNombre) || Boolean(categoriaSeleccionada);
-
-    if (!tieneFiltro) {
-      cajaResultado.innerHTML = `
-        <p class="resumen-busqueda">
-          Mostrando <strong>${productos.length}</strong> producto(s) en existencias. Filtra por nombre o categoría.
-        </p>
-      `;
-      return;
-    }
-
-    const partesDescripcion = [];
-    if (busquedaNombre) partesDescripcion.push(`con nombre "${escaparHTML(busquedaNombre)}"`);
-    if (categoriaSeleccionada) partesDescripcion.push(`en categoría "${escaparHTML(categoriaSeleccionada)}"`);
-
-    cajaResultado.innerHTML = `
-      <p class="resumen-busqueda">
-        Se encontraron <strong>${productos.length}</strong> producto(s) ${partesDescripcion.join(" ")}.
-      </p>
-      <div class="resultados-rango">
-        ${productos.map(producto => renderizarFichaProducto(producto)).join("")}
+  function mostrarResultados() {
+    caja.innerHTML = `
+      <p class="resumen-busqueda">${textoResumen}</p>
+      <div class="lista-resultados">
+        ${productosEncontrados.map(renderizarFichaProducto).join("")}
       </div>
     `;
-  } catch (error) {
-    console.error("Error en búsqueda:", error);
-    cajaResultado.innerHTML = `
+  }
+
+  formulario.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const inputBusqueda =
+      document.getElementById("buscar-nombre") ||
+      document.getElementById("nombre-producto") ||
+      document.getElementById("buscar");
+
+    const termino = inputBusqueda ? inputBusqueda.value.trim() : "";
+    const botonBuscar = formulario.querySelector('button[type="submit"]');
+
+    if (!db) {
+      caja.innerHTML = '<p class="sin-resultados">No hay conexión con Supabase.</p>';
+      return;
+    }
+
+    if (botonBuscar) {
+      botonBuscar.disabled = true;
+      botonBuscar.textContent = "Buscando...";
+    }
+    caja.innerHTML = '<p>Buscando productos...</p>';
+
+    try {
+      let encontrados = [];
+
+      if (!termino) {
+        const { data, error } = await db
+          .from("productos")
+          .select("*")
+          .order("nombre", { ascending: true });
+
+        if (error) throw error;
+        encontrados = data || [];
+      } else {
+        // Consultar nombre y código por separado para evitar problemas
+        // con caracteres especiales en los filtros de Supabase.
+        const terminoSeguro = termino.replace(/[%_,()]/g, " ").trim();
+        const consultas = await Promise.all([
+          db.from("productos")
+            .select("*")
+            .ilike("nombre", `%${terminoSeguro}%`)
+            .order("nombre", { ascending: true }),
+          db.from("productos")
+            .select("*")
+            .ilike("numserie", `%${terminoSeguro}%`)
+            .order("nombre", { ascending: true })
+        ]);
+
+        for (const resultado of consultas) {
+          if (resultado.error) throw resultado.error;
+          encontrados.push(...(resultado.data || []));
+        }
+
+        // Si se escribió un número, también buscar por identificación exacta.
+        if (/^\d+$/.test(termino)) {
+          const { data, error } = await db
+            .from("productos")
+            .select("*")
+            .eq("identificacion", Number(termino));
+
+          if (error) throw error;
+          encontrados.push(...(data || []));
+        }
+
+        // Quitar duplicados cuando el producto coincide por nombre y código.
+        encontrados = Array.from(
+          new Map(encontrados.map(p => [String(p.identificacion), p])).values()
+        ).sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || ""), "es"));
+      }
+
+      productosEncontrados = encontrados;
+
+      if (productosEncontrados.length === 0) {
+        caja.innerHTML = `
+          <p class="sin-resultados">
+            No se encontraron productos${termino ? ` para "${escaparHTML(termino)}"` : ""}.
+          </p>
+        `;
+        return;
+      }
+
+      textoResumen = `Se encontraron <strong>${productosEncontrados.length}</strong> producto(s). Selecciona uno para consultar toda su información.`;
+      mostrarResultados();
+
+    } catch (error) {
+      console.error("Error en búsqueda de productos:", error);
+      caja.innerHTML = `
+        <p class="sin-resultados">
+          Error al consultar productos: ${escaparHTML(error.message)}
+        </p>
+      `;
+    } finally {
+      if (botonBuscar) {
+        botonBuscar.disabled = false;
+        botonBuscar.textContent = "Buscar";
+      }
+    }
+  });
+
+  // Selección de producto y regreso a los resultados.
+  caja.addEventListener("click", async function(e) {
+    const botonDetalles = e.target.closest(".btn-ver-detalles");
+
+    if (botonDetalles) {
+      const idProducto = botonDetalles.getAttribute("data-producto-id");
+      if (!idProducto) return;
+
+      botonDetalles.disabled = true;
+      botonDetalles.textContent = "Cargando...";
+
+      try {
+        // Consultar nuevamente el registro para mostrar datos actuales.
+        const { data: producto, error } = await db
+          .from("productos")
+          .select("*")
+          .eq("identificacion", Number(idProducto))
+          .single();
+
+        if (error) throw error; 
+        if (!producto) throw new Error("No se encontró el producto.");
+
+        caja.innerHTML = renderizarDetalleProducto(producto);
+      } catch (error) {
+        console.error("Error al cargar los detalles:", error);
+        mostrarAviso("No se pudieron cargar los detalles del producto.");
+        botonDetalles.disabled = false;
+        botonDetalles.textContent = "Ver detalles";
+      }
+      return;
+    }
+
+    if (e.target.closest("#btn-regresar-resultados")) {
+      mostrarResultados();
+    }
+  });
+
+  // Limpiar búsqueda y resultados.
+  btnLimpiar.addEventListener("click", function() {
+    const inputBusqueda =
+      document.getElementById("buscar-nombre") ||
+      document.getElementById("nombre-producto") ||
+      document.getElementById("buscar");
+
+    if (inputBusqueda) inputBusqueda.value = "";
+    productosEncontrados = [];
+    textoResumen = "";
+    caja.innerHTML = `
       <p class="sin-resultados">
-        Error al consultar: ${escaparHTML(error.message)}
+        Escribe el nombre, código o identificación de un producto para consultar el inventario.
       </p>
     `;
-  }
-}
-
-async function inicializarBusqueda() {
-
-  const { formulario, cajaResultado } = asegurarControlesExistencias();
-  const selectCategoria =
-    document.getElementById("filtro-categoria") ||
-    document.getElementById("categoria") ||
-    document.getElementById("tipo_producto");
-  const btnLimpiar = document.getElementById("btn-limpiar-existencias");
-
-  if (selectCategoria && esPestanaExistenciasActiva()) {
-    await poblarSelectorCategorias(selectCategoria);
-  }
-
-  if (selectCategoria && esPestanaExistenciasActiva()) {
-    selectCategoria.addEventListener("change", async () => {
-      await ejecutarBusquedaExistencias(formulario, cajaResultado, selectCategoria);
-    });
-  }
-
-  if (btnLimpiar && esPestanaExistenciasActiva()) {
-    btnLimpiar.addEventListener("click", async () => {
-      const nombreEl =
-        document.getElementById("buscar-nombre") ||
-        document.getElementById("nombre-producto") ||
-        document.getElementById("buscar");
-
-      if (nombreEl) nombreEl.value = "";
-      if (selectCategoria) selectCategoria.value = "";
-
-      if (db) {
-        await cargarTablasAutomaticamente();
-      }
-
-      if (cajaResultado) {
-        cajaResultado.innerHTML = "";
-      }
-    });
-  }
-
-  if (!formulario) return;
-
-  const caja = cajaResultado || document.getElementById("resultado");
-
-  formulario.addEventListener("submit", async function (e) {
-    e.preventDefault();
-    await ejecutarBusquedaExistencias(formulario, caja, selectCategoria);
   });
 }
 
@@ -1481,6 +1485,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   inicializarFormulariosDemo();
 
-  await inicializarBusqueda();
+  inicializarBusqueda();
 
 });
