@@ -3,48 +3,147 @@
 // Instrumentos Syntek
 // ============================================================
 
+
 const SUPABASE_URL = "https://phgozpmwgtbdiwzbbvcm.supabase.co";
 const SUPABASE_KEY = "sb_publishable_xGK8x1qxR8s_LjP3tcy6zA_62wPGS4o";
+
 
 const authDB = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
+
 // ------------------------------------------------------------
 // ELEMENTOS Y MENSAJES
 // ------------------------------------------------------------
 
+
 function mostrarMensajeAuth(texto, tipo = "info") {
   const mensaje = document.getElementById("mensaje-auth");
 
+
   if (!mensaje) return;
 
+
   mensaje.textContent = texto;
-  mensaje.className = `mensaje-auth mensaje-${tipo}`;
+  mensaje.className = mensaje-auth mensaje-${tipo};
   mensaje.hidden = false;
 }
+
+
+// ------------------------------------------------------------
+// 0. VALIDAR CREDENCIALES DE INICIO DE SESIÓN
+// ------------------------------------------------------------
+
+
+function validarCredencialesLogin(email, password, correoInput) {
+  if (!email || !password) {
+    return {
+      valido: false,
+      mensaje: "Completa el correo electrónico y la contraseña."
+    };
+  }
+
+
+  const formatoCorreoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const inputValido = correoInput ? correoInput.checkValidity() : true;
+
+
+  if (!formatoCorreoValido || !inputValido) {
+    return {
+      valido: false,
+      mensaje: "Escribe un correo electrónico con formato válido."
+    };
+  }
+
+
+  return {
+    valido: true,
+    mensaje: ""
+  };
+}
+
+
+const formularioLogin = document.getElementById("form-login");
+
+
+if (formularioLogin) {
+  formularioLogin.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+
+    const correoInput = document.getElementById("usuario");
+    const contrasenaInput = document.getElementById("contrasena");
+    const boton = formularioLogin.querySelector('button[type="submit"]');
+
+
+    const email = correoInput.value.trim();
+    const password = contrasenaInput.value;
+
+
+    const validacion = validarCredencialesLogin(email, password, correoInput);
+    if (!validacion.valido) {
+      mostrarMensajeAuth(validacion.mensaje, "error");
+      (!email ? correoInput : contrasenaInput).focus();
+      return;
+    }
+
+
+    boton.disabled = true;
+    boton.textContent = "Verificando...";
+
+
+    try {
+      const { error } = await authDB.auth.signInWithPassword({ email, password });
+
+
+      if (error) {
+        mostrarMensajeAuth("Correo o contraseña incorrectos.", "error");
+        contrasenaInput.value = "";
+        contrasenaInput.focus();
+        return;
+      }
+
+
+      window.location.href = "inicio.html";
+    } catch (error) {
+      console.error("Error en inicio de sesión:", error);
+      mostrarMensajeAuth("No se pudo iniciar sesión. Inténtalo de nuevo.", "error");
+      contrasenaInput.value = "";
+      contrasenaInput.focus();
+    } finally {
+      boton.disabled = false;
+      boton.textContent = "Login";
+    }
+  });
+}
+
 
 // ------------------------------------------------------------
 // 1. ENVIAR CORREO DE RECUPERACIÓN
 // ------------------------------------------------------------
 
+
 const formularioRecuperar = document.getElementById(
   "form-recuperar"
 );
 
+
 if (formularioRecuperar) {
   formularioRecuperar.addEventListener("submit", async (event) => {
     event.preventDefault();
+
 
     const correoInput = document.getElementById("correo");
     const boton = formularioRecuperar.querySelector(
       'button[type="submit"]'
     );
 
+
     const correo = correoInput.value.trim();
 
-    // Validar que se haya escrito un correo.
+
     if (!correo || !correoInput.checkValidity()) {
       mostrarMensajeAuth(
         "Escribe un correo electrónico válido.",
@@ -54,14 +153,17 @@ if (formularioRecuperar) {
       return;
     }
 
+
     boton.disabled = true;
     boton.textContent = "Enviando...";
+
 
     try {
       const urlRestablecimiento = new URL(
         "restablecer-contrasena.html",
         window.location.href
       ).href;
+
 
       const { error } = await authDB.auth.resetPasswordForEmail(
         correo,
@@ -70,26 +172,30 @@ if (formularioRecuperar) {
         }
       );
 
+
       if (error) {
         throw error;
       }
 
-      // Mensaje general para no revelar si el correo está registrado.
+
       mostrarMensajeAuth(
         "Si existe una cuenta asociada a ese correo, recibirás un enlace para restablecer tu contraseña. Revisa también tu carpeta de spam.",
         "success"
       );
 
+
       formularioRecuperar.reset();
+
 
     } catch (error) {
       console.error("Error al solicitar recuperación:", error);
 
+
       mostrarMensajeAuth(
-        "No se pudo enviar el correo de recuperación. Inténtalo nuevamente. " +
-        (error.message || ""),
+        "No se pudo enviar el correo de recuperación. Inténtalo nuevamente.",
         "error"
       );
+
 
     } finally {
       boton.disabled = false;
@@ -98,31 +204,38 @@ if (formularioRecuperar) {
   });
 }
 
+
 // ------------------------------------------------------------
 // 2. DETECTAR EL ENLACE DE RECUPERACIÓN
 // ------------------------------------------------------------
 
+
 const formularioRestablecer = document.getElementById(
   "form-restablecer"
 );
+
 
 if (formularioRestablecer) {
   const contenedorFormulario = document.getElementById(
     "contenedor-restablecer"
   );
 
+
   const boton = formularioRestablecer.querySelector(
     'button[type="submit"]'
   );
 
+
   let enlaceValido = false;
 
-  // Mostrar errores que Supabase devuelve en la URL.
+
   const parametrosURL = new URLSearchParams(
     window.location.hash.substring(1)
   );
 
+
   const errorURL = parametrosURL.get("error_description");
+
 
   if (errorURL) {
     mostrarMensajeAuth(
@@ -131,12 +244,14 @@ if (formularioRestablecer) {
     );
   }
 
-  // Supabase emite PASSWORD_RECOVERY al validar el enlace.
+
   authDB.auth.onAuthStateChange((evento, session) => {
     if (evento === "PASSWORD_RECOVERY" && session) {
       enlaceValido = true;
 
+
       contenedorFormulario.hidden = false;
+
 
       mostrarMensajeAuth(
         "Enlace verificado. Ahora puedes establecer tu nueva contraseña.",
@@ -145,14 +260,17 @@ if (formularioRestablecer) {
     }
   });
 
+
   // ----------------------------------------------------------
   // 3. GUARDAR LA NUEVA CONTRASEÑA
   // ----------------------------------------------------------
+
 
   formularioRestablecer.addEventListener(
     "submit",
     async (event) => {
       event.preventDefault();
+
 
       if (!enlaceValido) {
         mostrarMensajeAuth(
@@ -162,15 +280,17 @@ if (formularioRestablecer) {
         return;
       }
 
+
       const nueva = document.getElementById(
         "nueva-contrasena"
       ).value;
+
 
       const confirmar = document.getElementById(
         "confirmar-contrasena"
       ).value;
 
-      // Validar longitud mínima.
+
       if (nueva.length < 8) {
         mostrarMensajeAuth(
           "La contraseña debe tener al menos 8 caracteres.",
@@ -179,7 +299,7 @@ if (formularioRestablecer) {
         return;
       }
 
-      // Validar coincidencia.
+
       if (nueva !== confirmar) {
         mostrarMensajeAuth(
           "Las contraseñas no coinciden.",
@@ -188,36 +308,44 @@ if (formularioRestablecer) {
         return;
       }
 
+
       boton.disabled = true;
       boton.textContent = "Actualizando...";
+
 
       try {
         const { error } = await authDB.auth.updateUser({
           password: nueva
         });
 
+
         if (error) {
           throw error;
         }
 
+
         enlaceValido = false;
         formularioRestablecer.reset();
 
+
         formularioRestablecer.hidden = true;
+
 
         mostrarMensajeAuth(
           "¡Tu contraseña se actualizó correctamente! Ya puedes iniciar sesión con tu nueva contraseña.",
           "success"
         );
 
+
       } catch (error) {
         console.error("Error al actualizar contraseña:", error);
 
+
         mostrarMensajeAuth(
-          "No se pudo actualizar la contraseña. " +
-          (error.message || "Solicita un nuevo enlace e inténtalo otra vez."),
+          "No se pudo actualizar la contraseña. Solicita un nuevo enlace e inténtalo otra vez.",
           "error"
         );
+
 
       } finally {
         boton.disabled = false;
