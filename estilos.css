@@ -662,3 +662,159 @@ body.pagina-login, body.pagina-tarjeta { height: 100dvh; overflow: hidden; }
   }
 
 }
+
+
+/* =====================================================
+   ISSUE-020 - VISUALIZACIÓN DE DETALLES DEL PRODUCTO
+   ===================================================== */
+
+.lista-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.producto-resultado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+}
+
+.producto-resultado__informacion {
+  min-width: 0;
+}
+
+.producto-resultado__informacion h3 {
+  margin: 0 0 8px;
+  color: var(--texto);
+  font-size: 21px;
+}
+
+.producto-resultado__informacion p {
+  margin: 5px 0;
+  color: var(--texto-suave);
+  overflow-wrap: anywhere;
+}
+
+.producto-resultado__acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.detalle-producto {
+  width: 100%;
+  padding: 24px;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  box-shadow: var(--sombra);
+}
+
+.detalle-producto__encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.detalle-producto__encabezado h2 {
+  margin: 8px 0;
+  color: var(--texto);
+  font-family: var(--fuente-titulos);
+  font-size: 27px;
+  overflow-wrap: anywhere;
+}
+
+.detalle-producto__encabezado p {
+  margin: 0;
+  color: var(--texto-suave);
+}
+
+.detalle-producto-etiqueta {
+  color: var(--primario);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.detalle-producto-contenido {
+  margin-top: 22px;
+}
+
+.detalle-producto-contenido h3 {
+  margin-bottom: 12px;
+  font-size: 19px;
+}
+
+.detalle-producto-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 18px;
+  margin: 0;
+}
+
+.detalle-producto-dato {
+  min-width: 0;
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.detalle-producto-dato dt {
+  margin-bottom: 5px;
+  color: var(--texto-suave);
+  font-size: 13px;
+}
+
+.detalle-producto-dato dd {
+  margin: 0;
+  color: var(--texto);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.detalle-producto-acciones {
+  margin-top: 22px;
+}
+
+#btn-limpiar-existencias {
+  margin-left: 8px;
+}
+
+@media (max-width: 650px) {
+  .producto-resultado {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .producto-resultado__acciones {
+    align-items: stretch;
+  }
+
+  .detalle-producto {
+    padding: 17px;
+  }
+
+  .detalle-producto-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-producto__encabezado h2 {
+    font-size: 23px;
+  }
+
+  .detalle-producto-acciones .boton {
+    width: 100%;
+  }
+}
