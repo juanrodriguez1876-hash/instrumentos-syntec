@@ -1,27 +1,668 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Existencias | Instrumentos Sintek</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="estilos.css">
+
+  <!-- Se conservan los archivos originales del sistema -->
   <script src="layout.js"></script>
   <script src="app.js" defer></script>
+
+  <style>
+    /* Número 018 - Estilos integrados al tema original */
+
+    .stock018 {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      color: var(--texto);
+    }
+
+    .stock018-filtros {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      padding: 22px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      box-shadow: var(--sombra);
+    }
+
+    .stock018-campo {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .stock018-campo label {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--texto);
+    }
+
+    .stock018-campo input {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .stock018-acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: end;
+    }
+
+    .stock018-acciones button {
+      min-height: 42px;
+    }
+
+    .stock018-resumen {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .stock018-indicador {
+      padding: 18px;
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      box-shadow: var(--sombra);
+      min-width: 0;
+    }
+
+    .stock018-indicador span {
+      display: block;
+      color: var(--texto-suave);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .stock018-indicador strong {
+      display: block;
+      margin-top: 7px;
+      font-family: var(--fuente-titulos);
+      font-size: 29px;
+      color: var(--texto);
+    }
+
+    .stock018-tabla {
+      background: var(--superficie);
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      overflow-x: auto;
+      box-shadow: var(--sombra);
+    }
+
+    .stock018-tabla table {
+      width: 100%;
+      min-width: 620px;
+      border-collapse: collapse;
+    }
+
+    .stock018-tabla th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 13px;
+      color: var(--texto-suave);
+      background: var(--superficie-2);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .stock018-tabla td {
+      padding: 15px 18px;
+      color: var(--texto);
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .stock018-tabla tr:last-child td {
+      border-bottom: none;
+    }
+
+    .stock018-tabla tbody tr:hover {
+      background: var(--superficie-2);
+    }
+
+    .stock018-estado {
+      display: inline-flex;
+      padding: 4px 11px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .stock018-ok {
+      background: var(--ok-fondo);
+      color: var(--ok-texto);
+    }
+
+    .stock018-bajo {
+      background: var(--poco-fondo);
+      color: var(--poco-texto);
+    }
+
+    .stock018-no {
+      background: var(--no-fondo);
+      color: var(--no-texto);
+    }
+
+    .stock018-mensaje {
+      text-align: center;
+      padding: 28px !important;
+      color: var(--texto-suave) !important;
+    }
+
+    .stock018-actualizacion {
+      color: var(--texto-suave);
+      font-size: 12px;
+      margin: 0;
+    }
+
+    .stock018-cantidad {
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stock018-error {
+      color: var(--no-texto);
+    }
+
+    @media(max-width: 760px) {
+      .stock018-resumen {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .stock018-filtros {
+        padding: 16px;
+      }
+    }
+
+    @media(max-width: 420px) {
+      .stock018-resumen {
+        gap: 8px;
+      }
+
+      .stock018-indicador {
+        padding: 12px;
+      }
+
+      .stock018-indicador strong {
+        font-size: 24px;
+      }
+    }
+  </style>
 </head>
+
 <body>
+
   <main class="contenido">
+
     <h1 class="titulo">Existencias</h1>
-    <p class="subtitulo">Stock actual por producto</p>
-    <div class="tabla-contenedor"><table class="tabla tabla--tarjetas" aria-label="Existencias">
-      <thead><tr><th scope="col">Producto</th><th scope="col">Stock</th><th scope="col">Mínimo</th><th scope="col">Estado</th></tr></thead>
-      <tbody>
-        <tr><td data-label="Producto">Guitarra eléctrica</td><td data-label="Stock">15</td><td data-label="Mínimo">5</td><td data-label="Estado"><span class="estado estado--ok">Disponible</span></td></tr>
-        <tr><td data-label="Producto">Guitarra acústica</td><td data-label="Stock">20</td><td data-label="Mínimo">8</td><td data-label="Estado"><span class="estado estado--ok">Disponible</span></td></tr>
-        <tr><td data-label="Producto">Saxofón alto</td><td data-label="Stock">0</td><td data-label="Mínimo">1</td><td data-label="Estado"><span class="estado estado--no">No disponible</span></td></tr>
-      </tbody></table></div>
+
+    <p class="subtitulo">
+      Consulta las cantidades disponibles de los productos registrados
+    </p>
+
+    <section class="stock018">
+
+      <!-- BUSCADOR Y FILTROS -->
+
+      <form id="form-busqueda" class="stock018-filtros">
+
+        <div class="stock018-campo">
+          <label for="buscar-nombre">
+            Nombre, código o identificación
+          </label>
+
+          <input
+            type="search"
+            id="buscar-nombre"
+            placeholder="Buscar producto..."
+          >
+        </div>
+
+        <div class="stock018-campo">
+          <label for="stock018-min">
+            Precio mínimo
+          </label>
+
+          <input
+            type="number"
+            id="stock018-min"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+          >
+        </div>
+
+        <div class="stock018-campo">
+          <label for="stock018-max">
+            Precio máximo
+          </label>
+
+          <input
+            type="number"
+            id="stock018-max"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+          >
+        </div>
+
+        <div class="stock018-acciones">
+
+          <button type="submit" class="boton">
+            Buscar
+          </button>
+
+          <button
+            type="button"
+            id="stock018-limpiar"
+            class="boton boton--contorno">
+            Limpiar
+          </button>
+
+          <button
+            type="button"
+            id="stock018-actualizar"
+            class="boton boton--contorno">
+            Actualizar
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <!-- INDICADORES -->
+
+      <div class="stock018-resumen">
+
+        <div class="stock018-indicador">
+          <span>Total de productos</span>
+          <strong id="stock018-total">0</strong>
+        </div>
+
+        <div class="stock018-indicador">
+          <span>Disponibles</span>
+          <strong id="stock018-disponibles">0</strong>
+        </div>
+
+        <div class="stock018-indicador">
+          <span>Por agotarse</span>
+          <strong id="stock018-bajos">0</strong>
+        </div>
+
+        <div class="stock018-indicador">
+          <span>Agotados</span>
+          <strong id="stock018-agotados">0</strong>
+        </div>
+
+      </div>
+
+
+      <!-- RESULTADOS -->
+
+      <div class="stock018-tabla">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Identificación</th>
+              <th>Producto</th>
+              <th>Precio</th>
+              <th>Existencias</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody id="stock018-resultados">
+
+            <tr>
+              <td colspan="5" class="stock018-mensaje">
+                Conectando con el inventario...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <p
+        id="stock018-actualizacion"
+        class="stock018-actualizacion">
+        Esperando conexión...
+      </p>
+
+    </section>
+
   </main>
+
+
+  <!-- LÓGICA DEL NÚMERO 018 -->
+
+  <script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    const formulario = document.getElementById("form-busqueda");
+    const resultados = document.getElementById("stock018-resultados");
+
+    const busqueda = document.getElementById("buscar-nombre");
+    const minimo = document.getElementById("stock018-min");
+    const maximo = document.getElementById("stock018-max");
+
+    const total = document.getElementById("stock018-total");
+    const disponibles = document.getElementById("stock018-disponibles");
+    const bajos = document.getElementById("stock018-bajos");
+    const agotados = document.getElementById("stock018-agotados");
+
+    const actualizacion = document.getElementById("stock018-actualizacion");
+
+    let productos = [];
+    let cargando = false;
+    let intervalo = null;
+
+    function escapar(texto) {
+      return String(texto ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[c]);
+    }
+
+    function precio(valor) {
+      return "$" + Number(valor || 0).toLocaleString("es-MX", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function mostrar() {
+
+      const termino = busqueda.value.trim().toLowerCase();
+
+      const precioMin = minimo.value === ""
+        ? null
+        : Number(minimo.value);
+
+      const precioMax = maximo.value === ""
+        ? null
+        : Number(maximo.value);
+
+      const filtrados = productos.filter(p => {
+
+        const nombre = String(p.nombre || "").toLowerCase();
+        const codigo = String(p.numserie || "").toLowerCase();
+        const id = String(p.identificacion ?? "").toLowerCase();
+
+        const importe = Number(p.precio || 0);
+
+        const coincideTexto =
+          !termino ||
+          nombre.includes(termino) ||
+          codigo.includes(termino) ||
+          id.includes(termino);
+
+        const coincideMin =
+          precioMin === null || importe >= precioMin;
+
+        const coincideMax =
+          precioMax === null || importe <= precioMax;
+
+        return coincideTexto && coincideMin && coincideMax;
+
+      });
+
+      // Los indicadores siempre representan el inventario completo.
+
+      total.textContent = productos.length;
+
+      disponibles.textContent = productos.filter(p =>
+        Number(p.continuo ?? 0) > 3
+      ).length;
+
+      bajos.textContent = productos.filter(p => {
+        const cantidad = Number(p.continuo ?? 0);
+        return cantidad > 0 && cantidad <= 3;
+      }).length;
+
+      agotados.textContent = productos.filter(p =>
+        Number(p.continuo ?? 0) <= 0
+      ).length;
+
+      if (!filtrados.length) {
+
+        resultados.innerHTML = `
+          <tr>
+            <td colspan="5" class="stock018-mensaje">
+              No se encontraron productos con esos filtros.
+            </td>
+          </tr>
+        `;
+
+        return;
+      }
+
+      resultados.innerHTML = filtrados.map(p => {
+
+        const cantidad = Number(p.continuo ?? 0);
+
+        let estado = "Disponible";
+        let clase = "stock018-ok";
+
+        if (cantidad <= 0) {
+          estado = "Agotado";
+          clase = "stock018-no";
+        } else if (cantidad <= 3) {
+          estado = "Por agotarse";
+          clase = "stock018-bajo";
+        }
+
+        return `
+          <tr>
+            <td>${escapar(p.identificacion)}</td>
+
+            <td>${escapar(p.nombre || "Sin nombre")}</td>
+
+            <td>${precio(p.precio)}</td>
+
+            <td class="stock018-cantidad">${cantidad}</td>
+
+            <td>
+              <span class="stock018-estado ${clase}">
+                ${estado}
+              </span>
+            </td>
+          </tr>
+        `;
+
+      }).join("");
+
+    }
+
+
+    // CONSULTA DIRECTA A LA BASE DE DATOS
+
+    async function consultar() {
+
+      if (cargando) return;
+
+      // db es inicializada por el app.js original.
+
+      if (typeof db === "undefined" || !db) {
+        actualizacion.textContent =
+          "Esperando conexión con Supabase...";
+        return;
+      }
+
+      cargando = true;
+
+      try {
+
+        const { data, error } = await db
+          .from("productos")
+          .select("identificacion, numserie, nombre, precio, continuo")
+          .order("nombre", { ascending: true });
+
+        if (error) throw error;
+
+        productos = data || [];
+
+        mostrar();
+
+        actualizacion.textContent =
+          "Última actualización: " +
+          new Date().toLocaleTimeString("es-MX") +
+          " | Actualización automática cada 5 segundos.";
+
+      } catch(error) {
+
+        console.error("Número 018:", error);
+
+        resultados.innerHTML = `
+          <tr>
+            <td colspan="5" class="stock018-mensaje stock018-error">
+              Error al consultar el inventario:
+              ${escapar(error.message)}
+            </td>
+          </tr>
+        `;
+
+        actualizacion.textContent =
+          "No fue posible actualizar los datos.";
+
+      } finally {
+
+        cargando = false;
+
+      }
+
+    }
+
+
+    // EVITAR QUE EL BUSCADOR ANTERIOR DE APP.JS
+    // INTERFIERA CON ESTA CONSULTA.
+
+    formulario.addEventListener("submit", function(event) {
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      mostrar();
+
+    });
+
+
+    // FILTROS EN TIEMPO REAL
+
+    busqueda.addEventListener("input", mostrar);
+    minimo.addEventListener("input", mostrar);
+    maximo.addEventListener("input", mostrar);
+
+
+    // LIMPIAR
+
+    document.getElementById("stock018-limpiar")
+      .addEventListener("click", function() {
+
+        busqueda.value = "";
+        minimo.value = "";
+        maximo.value = "";
+
+        mostrar();
+
+      });
+
+
+    // ACTUALIZAR MANUALMENTE
+
+    document.getElementById("stock018-actualizar")
+      .addEventListener("click", consultar);
+
+
+    // ESPERAR A QUE APP.JS INICIALICE SUPABASE
+
+    async function iniciar() {
+
+      let intentos = 0;
+
+      while (
+        (typeof db === "undefined" || !db) &&
+        intentos < 200
+      ) {
+
+        await new Promise(resolve =>
+          setTimeout(resolve, 100)
+        );
+
+        intentos++;
+
+      }
+
+      if (typeof db === "undefined" || !db) {
+
+        actualizacion.textContent =
+          "No se pudo establecer conexión con Supabase.";
+
+        resultados.innerHTML = `
+          <tr>
+            <td colspan="5" class="stock018-mensaje">
+              No se pudo conectar con la base de datos.
+              Comprueba la conexión y vuelve a cargar la página.
+            </td>
+          </tr>
+        `;
+
+        return;
+
+      }
+
+      await consultar();
+
+      intervalo = setInterval(function() {
+
+        if (!document.hidden) {
+          consultar();
+        }
+
+      }, 5000);
+
+    }
+
+
+    // ACTUALIZAR CUANDO SE REGRESA A LA PÁGINA
+
+    document.addEventListener("visibilitychange", function() {
+
+      if (!document.hidden) consultar();
+
+    });
+
+    iniciar();
+
+  });
+
+  </script>
+
 </body>
 </html>
